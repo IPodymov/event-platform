@@ -4,13 +4,19 @@ from factory.django import DjangoModelFactory
 from apps.games.models import Game, GameSlug, ParticipantType, ResultVerification, SeriesFormat
 
 
+def seeded_game(slug: GameSlug) -> Game:
+    """Disciplines are seeded by a data migration, so tests reuse them."""
+    return Game.objects.get(slug=slug)
+
+
 class GameFactory(DjangoModelFactory[Game]):
+    """An extra discipline outside the seeded catalog."""
+
     class Meta:
         model = Game
-        django_get_or_create = ("slug",)
 
-    slug = GameSlug.CS2
-    name = factory.LazyAttribute(lambda o: GameSlug(o.slug).label)
+    slug = factory.Sequence(lambda n: f"game{n}")
+    name = factory.Sequence(lambda n: f"Game {n}")
     participant_type = ParticipantType.TEAM
     roster_size = 5
     max_substitutes = 2
@@ -21,8 +27,6 @@ class GameFactory(DjangoModelFactory[Game]):
 
 
 class SoloGameFactory(GameFactory):
-    slug = GameSlug.HEARTHSTONE
     participant_type = ParticipantType.SOLO
     roster_size = 1
     max_substitutes = 0
-    allowed_series = factory.LazyFunction(lambda: [SeriesFormat.BO3, SeriesFormat.BO5])

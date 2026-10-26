@@ -4,15 +4,40 @@ import pytest
 from django.db import IntegrityError
 from rest_framework.test import APIClient
 
-from apps.games.models import Game, GameSlug, ParticipantType
-from apps.games.tests.factories import GameFactory, SoloGameFactory
+from apps.games.models import Game, GameSlug, ParticipantType, ResultVerification
+from apps.games.tests.factories import GameFactory, SoloGameFactory, seeded_game
 
 pytestmark = pytest.mark.django_db
 
 
+@pytest.mark.parametrize(
+    ("slug", "participant_type", "roster", "subs", "verification"),
+    [
+        (GameSlug.CS2, ParticipantType.TEAM, 5, 2, ResultVerification.MANUAL),
+        (GameSlug.DOTA2, ParticipantType.TEAM, 5, 2, ResultVerification.OPENDOTA),
+        (GameSlug.WILDRIFT, ParticipantType.TEAM, 5, 2, ResultVerification.MANUAL),
+        (GameSlug.HEARTHSTONE, ParticipantType.SOLO, 1, 0, ResultVerification.MANUAL),
+    ],
+)
+def test_disciplines_are_seeded(
+    slug: GameSlug, participant_type: str, roster: int, subs: int, verification: str
+) -> None:
+    game = seeded_game(slug)
+
+    assert game.name == slug.label
+    assert (game.participant_type, game.roster_size, game.max_substitutes) == (
+        participant_type,
+        roster,
+        subs,
+    )
+    assert game.result_verification == verification
+    assert game.allowed_series == [1, 3, 5]
+    assert game.is_active
+
+
 def test_team_and_solo_games() -> None:
-    assert GameFactory.create().is_team
-    assert not SoloGameFactory.create().is_team
+    assert seeded_game(GameSlug.CS2).is_team
+    assert not seeded_game(GameSlug.HEARTHSTONE).is_team
 
 
 @pytest.mark.parametrize(
@@ -33,36 +58,28 @@ def test_invalid_games_are_rejected_by_database(overrides: dict[str, Any]) -> No
 
 
 def test_slug_is_unique() -> None:
-    GameFactory.create()
-
     with pytest.raises(IntegrityError):
-        Game.objects.create(
-            name="Dup",
-            slug=GameSlug.CS2,
-            participant_type="team",
-            roster_size=5,
-            allowed_series=[1],
-        )
+        GameFactory.create(slug=GameSlug.CS2)
 
 
 def test_api_lists_active_games_without_auth(api_client: APIClient) -> None:
-    GameFactory.create()
+    Game.objects.filter(slug=GameSlug.WILDRIFT).update(is_active=False)
     SoloGameFactory.create(is_active=False)
 
     response = api_client.get("/api/v1/games/")
 
     assert response.status_code == 200
-    assert response.json() == [
-        {
-            "slug": "cs2",
-            "name": "Counter-Strike 2",
-            "participant_type": "team",
-            "roster_size": 5,
-            "max_substitutes": 2,
-            "allowed_series": [1, 3, 5],
-            "result_verification": "manual",
-        }
-    ]
+    data = response.json()
+    assert [g["slug"] for g in data] == ["cs2", "dota2", "hearthstone"]
+    assert data[0] == {
+        "slug": "cs2",
+        "name": "Counter-Strike 2",
+        "participant_type": "team",
+        "roster_size": 5,
+        "max_substitutes": 2,
+        "allowed_series": [1, 3, 5],
+        "result_verification": "manual",
+    }
 
 
 def test_api_is_read_only(api_client: APIClient) -> None:
