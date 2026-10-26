@@ -25,6 +25,9 @@ THIRD_PARTY_APPS = [
     "drf_spectacular",
     "allauth",
     "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.openid",
+    "allauth.socialaccount.providers.steam",
     "allauth.headless",
 ]
 LOCAL_APPS = [
@@ -77,7 +80,9 @@ DATABASES = {"default": env.db("DATABASE_URL")}
 DATABASES["default"]["ATOMIC_REQUESTS"] = False
 DATABASES["default"]["CONN_MAX_AGE"] = env.int("DB_CONN_MAX_AGE", default=60)
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+# Project apps set BigAutoField in their AppConfig. This default only applies to
+# third-party apps without one (allauth's OpenID store), matching their migrations.
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 AUTH_USER_MODEL = "accounts.User"
 AUTHENTICATION_BACKENDS = [
@@ -103,6 +108,17 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = ""
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = env("ACCOUNT_DEFAULT_HTTP_PROTOCOL", default="https")
 # Number of reverse proxies in front of the app, so rate limits see the client IP.
 ALLAUTH_TRUSTED_PROXY_COUNT = env.int("ALLAUTH_TRUSTED_PROXY_COUNT", default=0)
+
+# Third-party identities can only be linked to an existing email account (see adapter).
+SOCIALACCOUNT_ADAPTER = "apps.accounts.adapters.SocialAccountAdapter"
+SOCIALACCOUNT_LOGIN_ON_GET = False
+SOCIALACCOUNT_STORE_TOKENS = False
+SOCIALACCOUNT_PROVIDERS = {
+    "steam": {
+        # Steam Web API key, used to fetch the persona name and avatar after OpenID login.
+        "APP": {"client_id": "steam", "secret": env("STEAM_API_KEY", default="")},
+    },
+}
 
 # Auth REST API (allauth.headless): browser client only, session + CSRF.
 HEADLESS_CLIENTS = ("browser",)
