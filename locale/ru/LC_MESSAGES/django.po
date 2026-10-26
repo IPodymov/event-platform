@@ -1,0 +1,60 @@
+# Russian translations of the tournament platform.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tournament-platform\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 12:53+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+msgid "Personal info"
+msgstr "Персональная информация"
+
+msgid "Permissions"
+msgstr "Права доступа"
+
+msgid "Important dates"
+msgstr "Важные даты"
+
+msgid "Account operation failed."
+msgstr "Не удалось выполнить операцию с аккаунтом."
+
+msgid "Another account of this provider is already linked. Unlink it first."
+msgstr "У вас уже привязан другой аккаунт этого сервиса. Сначала отвяжите его."
+
+msgid ""
+"This account is not linked to any profile. Sign in with email and link it in "
+"your account settings."
+msgstr ""
+"Этот аккаунт не привязан ни к одному профилю. Войдите по email и привяжите "
+"его в настройках аккаунта."
+
+msgid "email address"
+msgstr "адрес электронной почты"
+
+msgid "user"
+msgstr "пользователь"
+
+msgid "users"
+msgstr "пользователи"
+
+msgid "Russian"
+msgstr "Русский"
+
+msgid "English"
+msgstr "Английский"
+
+msgid "Tournaments"
+msgstr "Турниры"
+
+#, python-format
+msgid "Signed in as %(email)s."
+msgstr "Вы вошли как %(email)s."

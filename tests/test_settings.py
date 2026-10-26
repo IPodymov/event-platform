@@ -1,5 +1,6 @@
 from django.apps import apps
 from django.conf import settings
+from django.utils import translation
 
 
 def test_timestamps_are_stored_in_utc() -> None:
@@ -22,3 +23,8 @@ def test_project_apps_use_big_auto_field() -> None:
 
     assert project_apps
     assert {c.default_auto_field for c in project_apps} == {"django.db.models.BigAutoField"}
+
+
+def test_project_strings_are_translated_to_russian() -> None:
+    with translation.override("ru"):
+        assert translation.gettext("Tournaments") == "Турниры"
