@@ -2,8 +2,8 @@ from typing import Any, cast
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.http import Http404, HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views import View
@@ -13,7 +13,7 @@ from apps.accounts import game_accounts, services
 from apps.accounts.exceptions import AccountsError
 from apps.accounts.forms import GameAccountForm, ProfileForm
 from apps.accounts.models import GameAccount, Profile, User
-from apps.accounts.selectors import list_game_accounts
+from apps.accounts.selectors import get_public_profile, list_game_accounts
 
 
 class ProfileEditView(LoginRequiredMixin, UpdateView[Profile, ProfileForm]):
@@ -70,3 +70,12 @@ class GameAccountDeleteView(LoginRequiredMixin, View):
         except AccountsError as error:
             messages.error(request, str(error))
         return redirect("accounts:game_accounts")
+
+
+def public_profile(request: HttpRequest, nickname: str) -> HttpResponse:
+    profile = get_public_profile(nickname)
+    if profile is None:
+        raise Http404
+    if profile.nickname != nickname:
+        return redirect("accounts:public_profile", nickname=profile.nickname, permanent=True)
+    return render(request, "accounts/public_profile.html", {"profile": profile})

@@ -1,0 +1,22 @@
+{% extends "allauth/layouts/base.html" %}
+{% load i18n %}
+{% block head_title %}{{ profile.nickname }}{% endblock head_title %}
+{% block content %}
+    <h1>{{ profile.nickname }}</h1>
+    {% if profile.avatar %}<img src="{{ profile.avatar.url }}" alt="{{ profile.nickname }}" width="128" height="128">{% endif %}
+    {% if profile.country %}<p>{{ profile.country.name }}</p>{% endif %}
+    {% if profile.bio %}<p>{{ profile.bio|linebreaksbr }}</p>{% endif %}
+    {# Teams and tournament history are added with the teams and tournaments tasks. #}
+    <h2>{% translate "Game accounts" %}</h2>
+    <ul>
+        {% for account in profile.user.game_accounts.all %}
+            <li>
+                {{ account.game.name }}: {{ account.external_id }}
+                {% if account.region %}({{ account.get_region_display }}){% endif %}
+                {% if account.verified %}✓ {% translate "verified" %}{% endif %}
+            </li>
+        {% empty %}
+            <li>{% translate "No game accounts yet." %}</li>
+        {% endfor %}
+    </ul>
+{% endblock content %}

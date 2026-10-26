@@ -1,5 +1,5 @@
 from allauth.socialaccount.models import SocialAccount
-from django.db.models import QuerySet
+from django.db.models import Prefetch, QuerySet
 
 from apps.accounts.models import GameAccount, Profile, User
 
@@ -44,3 +44,18 @@ def is_external_id_taken(
     if exclude_account_id is not None:
         accounts = accounts.exclude(pk=exclude_account_id)
     return accounts.exists()
+
+
+def get_public_profile(nickname: str) -> Profile | None:
+    """Profile shown publicly by nickname (case-insensitive); inactive users are hidden."""
+    return (
+        Profile.objects.filter(nickname__iexact=nickname, user__is_active=True)
+        .select_related("user")
+        .prefetch_related(
+            Prefetch(
+                "user__game_accounts",
+                queryset=GameAccount.objects.select_related("game").order_by("game__name"),
+            )
+        )
+        .first()
+    )

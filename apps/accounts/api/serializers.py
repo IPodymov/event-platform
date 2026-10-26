@@ -34,3 +34,24 @@ class GameAccountUpdateSerializer(serializers.ModelSerializer[GameAccount]):
     class Meta:
         model = GameAccount
         fields = ("external_id", "region")
+
+
+class PublicGameAccountSerializer(serializers.ModelSerializer[GameAccount]):
+    game: serializers.SlugRelatedField[Game] = serializers.SlugRelatedField(
+        slug_field="slug", read_only=True
+    )
+
+    class Meta:
+        model = GameAccount
+        fields = ("game", "external_id", "region", "verified")
+        read_only_fields = fields
+
+
+class PublicProfileSerializer(serializers.ModelSerializer[Profile]):
+    country = CountryField(country_dict=True)
+    game_accounts = PublicGameAccountSerializer(source="user.game_accounts", many=True)
+
+    class Meta:
+        model = Profile
+        fields = ("nickname", "avatar", "country", "bio", "game_accounts")
+        read_only_fields = fields

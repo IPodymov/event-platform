@@ -1,10 +1,12 @@
 from typing import Any, cast
 
 from django.db.models import QuerySet
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
 from rest_framework import generics
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
+from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import BaseSerializer
@@ -14,9 +16,10 @@ from apps.accounts.api.serializers import (
     GameAccountSerializer,
     GameAccountUpdateSerializer,
     ProfileSerializer,
+    PublicProfileSerializer,
 )
 from apps.accounts.models import GameAccount, Profile, User
-from apps.accounts.selectors import list_game_accounts
+from apps.accounts.selectors import get_public_profile, list_game_accounts
 
 
 @extend_schema(tags=["profile"])
@@ -87,3 +90,18 @@ class MyGameAccountDetailView(generics.RetrieveUpdateDestroyAPIView[GameAccount]
 
     def perform_destroy(self, instance: GameAccount) -> None:
         game_accounts.game_account_delete(account=instance)
+
+
+@extend_schema(tags=["players"])
+class PublicProfileView(generics.RetrieveAPIView[Profile]):
+    """A player's public profile by nickname (case-insensitive)."""
+
+    serializer_class = PublicProfileSerializer
+    permission_classes = (AllowAny,)
+    lookup_url_kwarg = "nickname"
+
+    def get_object(self) -> Profile:
+        profile = get_public_profile(self.kwargs["nickname"])
+        if profile is None:
+            raise Http404
+        return profile

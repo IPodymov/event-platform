@@ -1,6 +1,11 @@
 from django.urls import path
 
-from apps.accounts.views import GameAccountDeleteView, GameAccountsView, ProfileEditView
+from apps.accounts.views import (
+    GameAccountDeleteView,
+    GameAccountsView,
+    ProfileEditView,
+    public_profile,
+)
 
 app_name = "accounts"
 
@@ -12,4 +17,5 @@ urlpatterns = [
         GameAccountDeleteView.as_view(),
         name="game_account_delete",
     ),
+    path("players/<str:nickname>/", public_profile, name="public_profile"),
 ]
