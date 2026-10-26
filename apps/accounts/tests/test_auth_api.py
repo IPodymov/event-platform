@@ -24,16 +24,24 @@ def pending_flows(response: Any) -> set[str]:
 
 
 def test_signup_requires_email_verification(client: Client) -> None:
-    response = post(client, "/auth/signup", {"email": "Api@Example.com", "password": PASSWORD})
+    response = post(
+        client,
+        "/auth/signup",
+        {"email": "Api@Example.com", "nickname": "api_user", "password": PASSWORD},
+    )
 
     assert response.status_code == 401
     assert pending_flows(response) == {"verify_email"}
-    assert User.objects.filter(email="api@example.com").exists()
+    assert User.objects.get(email="api@example.com").profile.nickname == "api_user"
     assert len(mail.outbox) == 1
 
 
 def test_verify_email_authenticates(client: Client) -> None:
-    post(client, "/auth/signup", {"email": "verify@example.com", "password": PASSWORD})
+    post(
+        client,
+        "/auth/signup",
+        {"email": "verify@example.com", "nickname": "verifier", "password": PASSWORD},
+    )
 
     response = post(client, "/auth/email/verify", {"key": last_email_key("/confirm-email/")})
 
@@ -80,3 +88,11 @@ def test_openapi_specification_is_served(client: Client) -> None:
 
     assert response.status_code == 200
     assert "/auth/login" in "".join(response.json()["paths"])
+
+
+def test_signup_requires_nickname(client: Client) -> None:
+    response = post(client, "/auth/signup", {"email": "nonick@example.com", "password": PASSWORD})
+
+    assert response.status_code == 400
+    assert {e["param"] for e in response.json()["errors"]} == {"nickname"}
+    assert not User.objects.filter(email="nonick@example.com").exists()

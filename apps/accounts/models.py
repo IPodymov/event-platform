@@ -5,6 +5,11 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.functions import Lower
 from django.utils.translation import gettext_lazy as _
+from django_countries.fields import CountryField
+
+from apps.accounts.validators import NICKNAME_MAX_LENGTH, nickname_validator, validate_timezone
+
+DEFAULT_TIMEZONE = "Europe/Moscow"
 
 
 class UserManager(BaseUserManager["User"]):
@@ -61,3 +66,34 @@ class User(AbstractUser):
 
     def __str__(self) -> str:
         return self.email
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="profile", verbose_name=_("user")
+    )
+    nickname = models.CharField(
+        _("nickname"), max_length=NICKNAME_MAX_LENGTH, validators=[nickname_validator]
+    )
+    avatar = models.ImageField(_("avatar"), upload_to="avatars/", blank=True)
+    country = CountryField(_("country"), blank=True)
+    timezone = models.CharField(
+        _("time zone"), max_length=64, default=DEFAULT_TIMEZONE, validators=[validate_timezone]
+    )
+    bio = models.TextField(_("about"), max_length=500, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("profile")
+        verbose_name_plural = _("profiles")
+        constraints = [
+            models.UniqueConstraint(
+                Lower("nickname"),
+                name="accounts_profile_nickname_ci_unique",
+                violation_error_message=_("This nickname is already taken."),
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return self.nickname

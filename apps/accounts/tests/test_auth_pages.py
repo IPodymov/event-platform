@@ -1,8 +1,11 @@
+from typing import Any
+
 import pytest
 from allauth.account.models import EmailAddress
 from django.core import mail
 from django.test import Client
 from django.urls import reverse
+from django.utils import translation
 
 from apps.accounts.models import User
 from apps.accounts.tests.factories import DEFAULT_PASSWORD, UserFactory
@@ -23,12 +26,18 @@ def is_authenticated(client: Client) -> bool:
     return "_auth_user_id" in client.session
 
 
-def signup(client: Client, email: str) -> None:
+def signup(client: Client, email: str, nickname: str = "newbie") -> Any:
     response = client.post(
         reverse("account_signup"),
-        {"email": email, "password1": NEW_PASSWORD, "password2": NEW_PASSWORD},
+        {
+            "email": email,
+            "nickname": nickname,
+            "password1": NEW_PASSWORD,
+            "password2": NEW_PASSWORD,
+        },
     )
-    assert response.status_code == 302
+    assert response.status_code == 302, response.context["form"].errors
+    return response
 
 
 def test_signup_creates_unverified_user_and_sends_confirmation(client: Client) -> None:
@@ -36,6 +45,7 @@ def test_signup_creates_unverified_user_and_sends_confirmation(client: Client) -
 
     user = User.objects.get(email="new.player@example.com")
     assert user.check_password(NEW_PASSWORD)
+    assert user.profile.nickname == "newbie"
     assert not EmailAddress.objects.get(user=user).verified
     assert not is_authenticated(client)
     assert len(mail.outbox) == 1
@@ -118,3 +128,29 @@ def test_failed_logins_are_rate_limited(client: Client) -> None:
 
 def test_home_page_renders(client: Client) -> None:
     assert client.get(reverse("home")).status_code == 200
+
+
+@pytest.mark.parametrize(
+    ("nickname", "error"),
+    [("", "required"), ("x", "3 to 20"), ("имя_игрока", "Latin"), ("TAKEN", "taken")],
+)
+def test_signup_rejects_bad_nickname(client: Client, nickname: str, error: str) -> None:
+    UserFactory.create(profile__nickname="taken")
+
+    with translation.override("en"):
+        response = client.post(
+            reverse("account_signup"),
+            {
+                "email": "x@example.com",
+                "nickname": nickname,
+                "password1": NEW_PASSWORD,
+                "password2": NEW_PASSWORD,
+            },
+            HTTP_ACCEPT_LANGUAGE="en",
+        )
+        # Error messages are lazy: render them while English is active.
+        errors = " ".join(response.context["form"].errors["nickname"])
+
+    assert response.status_code == 200
+    assert error in errors
+    assert not User.objects.filter(email="x@example.com").exists()

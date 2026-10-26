@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tournament-platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 12:53+0000\n"
+"POT-Creation-Date: 2026-10-26 12:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,6 +15,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
 msgid "Personal info"
 msgstr "Персональная информация"
 
@@ -37,6 +38,18 @@ msgstr ""
 "Этот аккаунт не привязан ни к одному профилю. Войдите по email и привяжите "
 "его в настройках аккаунта."
 
+msgid "This nickname is already taken."
+msgstr "Этот ник уже занят."
+
+msgid "Upload a JPEG, PNG or WebP image."
+msgstr "Загрузите изображение в формате JPEG, PNG или WebP."
+
+msgid "The image is too large."
+msgstr "Изображение слишком большое."
+
+msgid "Nickname"
+msgstr "Ник"
+
 msgid "email address"
 msgstr "адрес электронной почты"
 
@@ -46,11 +59,52 @@ msgstr "пользователь"
 msgid "users"
 msgstr "пользователи"
 
+msgid "nickname"
+msgstr "ник"
+
+msgid "avatar"
+msgstr "аватар"
+
+msgid "country"
+msgstr "страна"
+
+msgid "time zone"
+msgstr "часовой пояс"
+
+msgid "about"
+msgstr "о себе"
+
+msgid "profile"
+msgstr "профиль"
+
+msgid "profiles"
+msgstr "профили"
+
+msgid ""
+"Nickname must be 3 to 20 characters long and contain only Latin letters, "
+"digits, underscores and hyphens."
+msgstr "Ник должен быть длиной от 3 до 20 символов и содержать только латинские буквы, цифры, подчёркивания и дефисы."
+
+msgid "Unknown time zone."
+msgstr "Неизвестный часовой пояс."
+
+msgid "Profile saved."
+msgstr "Профиль сохранён."
+
+msgid "Operation failed."
+msgstr "Не удалось выполнить операцию."
+
 msgid "Russian"
 msgstr "Русский"
 
 msgid "English"
 msgstr "Английский"
+
+msgid "Profile"
+msgstr "Профиль"
+
+msgid "Save"
+msgstr "Сохранить"
 
 msgid "Tournaments"
 msgstr "Турниры"

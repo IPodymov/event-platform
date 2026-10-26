@@ -1,7 +1,12 @@
+import mimetypes
 from pathlib import Path
 
+import django_stubs_ext
 import environ
 from django.utils.translation import gettext_lazy as _
+
+# Lets Django generic classes (ModelForm[Model], UpdateView[...]) be subscripted at runtime.
+django_stubs_ext.monkeypatch()
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -30,6 +35,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount.providers.steam",
     "allauth.socialaccount.providers.discord",
     "allauth.headless",
+    "django_countries",
 ]
 LOCAL_APPS = [
     "apps.accounts",
@@ -56,6 +62,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "apps.accounts.middleware.UserTimezoneMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -98,6 +105,8 @@ LOGIN_REDIRECT_URL = "home"
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+ACCOUNT_ADAPTER = "apps.accounts.adapters.AccountAdapter"
+ACCOUNT_SIGNUP_FORM_CLASS = "apps.accounts.forms.SignupForm"
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_CONFIRM_EMAIL_ON_GET = False
@@ -156,6 +165,13 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "media/"
 MEDIA_ROOT = env.path("DJANGO_MEDIA_ROOT", default=BASE_DIR / "media")
 
+# Avatars are re-encoded to WebP within AVATAR_SIZE x AVATAR_SIZE.
+AVATAR_MAX_BYTES = 5 * 1024 * 1024
+AVATAR_MAX_PIXELS = 25_000_000
+AVATAR_SIZE = 512
+# Python 3.12 does not know WebP; needed for correct Content-Type on avatars.
+mimetypes.add_type("image/webp", ".webp")
+
 _email = env.email_url("EMAIL_URL", default="consolemail://")
 EMAIL_BACKEND = _email["EMAIL_BACKEND"]
 EMAIL_HOST = _email.get("EMAIL_HOST", "localhost")
@@ -196,6 +212,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 25,
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "EXCEPTION_HANDLER": "config.exceptions.api_exception_handler",
 }
 
 SPECTACULAR_SETTINGS = {

@@ -1,6 +1,6 @@
 from allauth.socialaccount.models import SocialAccount
 
-from apps.accounts.models import User
+from apps.accounts.models import Profile, User
 
 STEAM_PROVIDER = "steam"
 DISCORD_PROVIDER = "discord"
@@ -23,3 +23,10 @@ def get_steam_id(user: User) -> str | None:
 def get_discord_id(user: User) -> str | None:
     """Return the Discord user id linked to the user, if any."""
     return get_social_uid(user, DISCORD_PROVIDER)
+
+
+def is_nickname_taken(nickname: str, *, exclude_profile_id: int | None = None) -> bool:
+    profiles = Profile.objects.filter(nickname__iexact=nickname)
+    if exclude_profile_id is not None:
+        profiles = profiles.exclude(pk=exclude_profile_id)
+    return profiles.exists()

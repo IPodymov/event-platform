@@ -1,15 +1,28 @@
 from typing import Any
 
+from allauth.account.adapter import DefaultAccountAdapter
 from allauth.core.exceptions import ImmediateHttpResponse
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.socialaccount.models import SocialLogin
 from django.contrib import messages
+from django.db import transaction
+from django.forms import Form
 from django.http import HttpRequest
 from django.shortcuts import redirect
 
 from apps.accounts import services
 from apps.accounts.exceptions import AccountsError, SocialAccountAlreadyLinkedError
 from apps.accounts.models import User
+
+
+class AccountAdapter(DefaultAccountAdapter):
+    def save_user(self, request: HttpRequest, user: User, form: Form, commit: bool = True) -> User:
+        # Create the user and the profile atomically, so no user is left without a nickname.
+        with transaction.atomic():
+            user = super().save_user(request, user, form, commit=commit)
+            if commit:
+                services.profile_create(user=user, nickname=form.cleaned_data["nickname"])
+        return user
 
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
