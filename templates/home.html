@@ -2,9 +2,9 @@
 {% load i18n %}
 {% block head_title %}{% translate "Tournaments" %}{% endblock head_title %}
 {% block content %}
-    {# Placeholder until the home page task (Sprint 9). #}
-    <h1>{% translate "Tournaments" %}</h1>
-    {% if user.is_authenticated %}
-        <p>{% blocktranslate with email=user.email %}Signed in as {{ email }}.{% endblocktranslate %}</p>
-    {% endif %}
+{# Placeholder until the home page task (Sprint 9). #}
+<h1>{% translate "Tournaments" %}</h1>
+{% if user.is_authenticated %}
+<p>{% blocktranslate with email=user.email %}Signed in as {{ email }}.{% endblocktranslate %}</p>
+{% endif %}
 {% endblock content %}

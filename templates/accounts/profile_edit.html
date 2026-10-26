@@ -2,11 +2,11 @@
 {% load i18n %}
 {% block head_title %}{% translate "Profile" %}{% endblock head_title %}
 {% block content %}
-    <h1>{% translate "Profile" %}</h1>
-    {% if object.avatar %}<img src="{{ object.avatar.url }}" alt="" width="128" height="128">{% endif %}
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">{% translate "Save" %}</button>
-    </form>
+<h1>{% translate "Profile" %}</h1>
+{% if object.avatar %}<img src="{{ object.avatar.url }}" alt="" width="128" height="128">{% endif %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% translate "Save" %}</button>
+</form>
 {% endblock content %}

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tournament-platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 12:59+0000\n"
+"POT-Creation-Date: 2026-10-26 13:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,13 +83,57 @@ msgstr "профили"
 msgid ""
 "Nickname must be 3 to 20 characters long and contain only Latin letters, "
 "digits, underscores and hyphens."
-msgstr "Ник должен быть длиной от 3 до 20 символов и содержать только латинские буквы, цифры, подчёркивания и дефисы."
+msgstr ""
+"Ник должен быть длиной от 3 до 20 символов и содержать только латинские "
+"буквы, цифры, подчёркивания и дефисы."
 
 msgid "Unknown time zone."
 msgstr "Неизвестный часовой пояс."
 
 msgid "Profile saved."
 msgstr "Профиль сохранён."
+
+msgid "Solo"
+msgstr "Соло"
+
+msgid "Team"
+msgstr "Команда"
+
+msgid "Manual confirmation"
+msgstr "Ручное подтверждение"
+
+msgid "OpenDota"
+msgstr "OpenDota"
+
+msgid "name"
+msgstr "название"
+
+msgid "slug"
+msgstr "код"
+
+msgid "participant type"
+msgstr "тип участия"
+
+msgid "roster size"
+msgstr "размер основного состава"
+
+msgid "max substitutes"
+msgstr "максимум запасных"
+
+msgid "allowed series"
+msgstr "допустимые серии"
+
+msgid "result verification"
+msgstr "проверка результата"
+
+msgid "active"
+msgstr "активна"
+
+msgid "game"
+msgstr "дисциплина"
+
+msgid "games"
+msgstr "дисциплины"
 
 msgid "Operation failed."
 msgstr "Не удалось выполнить операцию."
