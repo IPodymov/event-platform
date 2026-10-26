@@ -1,10 +1,14 @@
 import os
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 from hypothesis import settings as hypothesis_settings
 from pytest_django.fixtures import Settings
 from rest_framework.test import APIClient
+
+if TYPE_CHECKING:
+    from apps.accounts.models import User
 
 hypothesis_settings.register_profile("ci", max_examples=200, deadline=None)
 hypothesis_settings.register_profile("dev", max_examples=50, deadline=None)
@@ -20,3 +24,11 @@ def _isolated_media_root(settings: Settings, tmp_path: Path) -> None:
 @pytest.fixture
 def api_client() -> APIClient:
     return APIClient()
+
+
+@pytest.fixture
+def user(db: None) -> "User":
+    # Imported lazily: models must not load before pytest-django sets up Django.
+    from apps.accounts.tests.factories import UserFactory
+
+    return UserFactory.create()
