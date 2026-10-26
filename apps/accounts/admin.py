@@ -1,11 +1,15 @@
+from typing import cast
+
 from django.contrib import admin
 from django.contrib.admin.options import InlineModelAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import AdminUserCreationForm, UserChangeForm
+from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
-from apps.accounts.models import Profile, User
+from apps.accounts import game_accounts
+from apps.accounts.models import GameAccount, Profile, User
 
 
 class UserCreationForm(AdminUserCreationForm):
@@ -57,3 +61,43 @@ class UserAdmin(BaseUserAdmin):
     def get_inlines(self, request: HttpRequest, obj: User | None) -> list[type[InlineModelAdmin]]:
         # The add form only asks for credentials; the profile is edited afterwards.
         return list(self.inlines) if obj is not None else []
+
+
+@admin.register(GameAccount)
+class GameAccountAdmin(admin.ModelAdmin[GameAccount]):
+    list_display = (
+        "external_id",
+        "game",
+        "region",
+        "user",
+        "verified",
+        "verified_by",
+        "verified_at",
+    )
+    list_filter = ("verified", "game", "region")
+    search_fields = ("external_id", "user__email", "user__profile__nickname")
+    list_select_related = ("game", "user", "verified_by")
+    readonly_fields = ("verified", "verified_by", "verified_at", "created_at", "updated_at")
+    actions = ("verify", "unverify")
+
+    def has_add_permission(self, request: HttpRequest) -> bool:
+        # Accounts are added by players (or synced from Steam), never by staff.
+        return False
+
+    @admin.action(description=_("Verify selected game accounts"))
+    def verify(self, request: HttpRequest, queryset: QuerySet[GameAccount]) -> None:
+        self._set_verified(request, queryset, verified=True)
+
+    @admin.action(description=_("Remove verification"))
+    def unverify(self, request: HttpRequest, queryset: QuerySet[GameAccount]) -> None:
+        self._set_verified(request, queryset, verified=False)
+
+    def _set_verified(
+        self, request: HttpRequest, queryset: QuerySet[GameAccount], *, verified: bool
+    ) -> None:
+        moderator = cast(User, request.user)
+        for account in queryset:
+            game_accounts.game_account_set_verified(
+                account=account, moderator=moderator, verified=verified
+            )
+        self.message_user(request, _("Updated: %(count)d") % {"count": queryset.count()})

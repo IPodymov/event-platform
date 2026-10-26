@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 
 from apps.accounts.validators import NICKNAME_MAX_LENGTH, nickname_validator, validate_timezone
+from apps.games.regions import Region
 
 DEFAULT_TIMEZONE = "Europe/Moscow"
 
@@ -97,3 +98,49 @@ class Profile(models.Model):
 
     def __str__(self) -> str:
         return self.nickname
+
+
+class GameAccount(models.Model):
+    """A player's account in a discipline: SteamID64, Riot ID or BattleTag."""
+
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="game_accounts", verbose_name=_("user")
+    )
+    game = models.ForeignKey(
+        "games.Game", on_delete=models.PROTECT, related_name="accounts", verbose_name=_("game")
+    )
+    external_id = models.CharField(_("account id"), max_length=64)
+    region = models.CharField(_("region"), max_length=20, choices=Region.choices, blank=True)
+    verified = models.BooleanField(_("verified"), default=False)
+    verified_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="+",
+        verbose_name=_("verified by"),
+    )
+    verified_at = models.DateTimeField(_("verified at"), null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("game account")
+        verbose_name_plural = _("game accounts")
+        ordering = ("game__name",)
+        constraints = [
+            models.UniqueConstraint(
+                "game",
+                Lower("external_id"),
+                name="accounts_gameaccount_game_external_id_ci_unique",
+                violation_error_message=_("This account is already linked to another player."),
+            ),
+            models.UniqueConstraint(
+                fields=("user", "game"),
+                name="accounts_gameaccount_one_per_game",
+                violation_error_message=_("You already have an account for this game."),
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.game_id}: {self.external_id}"

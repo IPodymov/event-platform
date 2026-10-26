@@ -79,7 +79,33 @@ def test_api_lists_active_games_without_auth(api_client: APIClient) -> None:
         "max_substitutes": 2,
         "allowed_series": [1, 3, 5],
         "result_verification": "manual",
+        "external_id_kind": "steam_id64",
+        "account_regions": [],
+        "tournament_regions": [
+            {"value": v, "label": label}
+            for v, label in [
+                ("eu", "Европа"),
+                ("cis", "СНГ"),
+                ("na", "Северная Америка"),
+                ("sa", "Южная Америка"),
+                ("asia", "Азия"),
+                ("oce", "Океания"),
+            ]
+        ],
     }
+
+
+def test_api_exposes_account_regions(api_client: APIClient) -> None:
+    data = {g["slug"]: g for g in api_client.get("/api/v1/games/").json()}
+
+    assert data["wildrift"]["external_id_kind"] == "riot_id"
+    assert [r["label"] for r in data["wildrift"]["account_regions"]] == ["RU", "EUW", "EUNE", "TR"]
+    assert data["hearthstone"]["external_id_kind"] == "battletag"
+    assert [r["value"] for r in data["hearthstone"]["account_regions"]] == [
+        "hs_americas",
+        "hs_europe",
+        "hs_apac",
+    ]
 
 
 def test_api_is_read_only(api_client: APIClient) -> None:

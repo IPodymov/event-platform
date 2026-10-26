@@ -1,0 +1,36 @@
+{% extends "allauth/layouts/base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Game accounts" %}{% endblock head_title %}
+{% block content %}
+    <h1>{% translate "Game accounts" %}</h1>
+    <table>
+        {% for account in accounts %}
+            <tr>
+                <td>{{ account.game.name }}</td>
+                <td>{{ account.external_id }}</td>
+                <td>{{ account.get_region_display|default:"" }}</td>
+                <td>{% if account.verified %}{% translate "verified" %}{% else %}{% translate "awaiting verification" %}{% endif %}</td>
+                <td>
+                    {% if account.game.slug != "cs2" and account.game.slug != "dota2" %}
+                        <form method="post" action="{% url 'accounts:game_account_delete' account.pk %}">
+                            {% csrf_token %}
+                            <button type="submit">{% translate "Remove" %}</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td>{% translate "No game accounts yet." %}</td></tr>
+        {% endfor %}
+    </table>
+    <p>
+        {% url 'socialaccount_connections' as connections_url %}
+        {% blocktranslate %}CS2 and Dota 2 accounts are added automatically when you <a href="{{ connections_url }}">link Steam</a>.{% endblocktranslate %}
+    </p>
+    <h2>{% translate "Add Riot ID or BattleTag" %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">{% translate "Add" %}</button>
+    </form>
+{% endblock content %}

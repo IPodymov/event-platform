@@ -1,6 +1,7 @@
 from typing import Any
 
 from django.utils.translation import gettext_lazy as _
+from django_stubs_ext import StrOrPromise
 from rest_framework import exceptions, views
 from rest_framework.response import Response
 
@@ -12,7 +13,7 @@ class DomainError(Exception):
     can attach it to that field.
     """
 
-    message = _("Operation failed.")
+    message: StrOrPromise = _("Operation failed.")
     field: str | None = None
 
     def __str__(self) -> str:

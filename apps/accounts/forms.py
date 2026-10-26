@@ -6,6 +6,8 @@ from apps.accounts.exceptions import NicknameTakenError
 from apps.accounts.models import Profile, User
 from apps.accounts.selectors import is_nickname_taken
 from apps.accounts.validators import NICKNAME_MAX_LENGTH, nickname_validator
+from apps.games.models import Game
+from apps.games.regions import HEARTHSTONE_REGIONS, STEAM_GAMES, WILDRIFT_REGIONS
 
 
 class SignupForm(forms.Form):
@@ -38,3 +40,16 @@ class ProfileForm(forms.ModelForm[Profile]):
         if is_nickname_taken(nickname, exclude_profile_id=self.instance.pk):
             raise forms.ValidationError(str(NicknameTakenError()))
         return nickname
+
+
+class GameAccountForm(forms.Form):
+    game = forms.ModelChoiceField(
+        label=_("Game"),
+        queryset=Game.objects.filter(is_active=True).exclude(slug__in=STEAM_GAMES),
+        to_field_name="slug",
+    )
+    external_id = forms.CharField(label=_("Riot ID or BattleTag"), max_length=64)
+    region = forms.ChoiceField(
+        label=_("Region"),
+        choices=[(r.value, r.label) for r in (*WILDRIFT_REGIONS, *HEARTHSTONE_REGIONS)],
+    )

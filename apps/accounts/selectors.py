@@ -1,6 +1,7 @@
 from allauth.socialaccount.models import SocialAccount
+from django.db.models import QuerySet
 
-from apps.accounts.models import Profile, User
+from apps.accounts.models import GameAccount, Profile, User
 
 STEAM_PROVIDER = "steam"
 DISCORD_PROVIDER = "discord"
@@ -30,3 +31,16 @@ def is_nickname_taken(nickname: str, *, exclude_profile_id: int | None = None) -
     if exclude_profile_id is not None:
         profiles = profiles.exclude(pk=exclude_profile_id)
     return profiles.exists()
+
+
+def list_game_accounts(user: User) -> QuerySet[GameAccount]:
+    return GameAccount.objects.filter(user=user).select_related("game")
+
+
+def is_external_id_taken(
+    game_id: int, external_id: str, *, exclude_account_id: int | None = None
+) -> bool:
+    accounts = GameAccount.objects.filter(game_id=game_id, external_id__iexact=external_id)
+    if exclude_account_id is not None:
+        accounts = accounts.exclude(pk=exclude_account_id)
+    return accounts.exists()

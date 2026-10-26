@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tournament-platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 13:02+0000\n"
+"POT-Creation-Date: 2026-10-26 13:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,6 +24,16 @@ msgstr "Права доступа"
 
 msgid "Important dates"
 msgstr "Важные даты"
+
+msgid "Verify selected game accounts"
+msgstr "Подтвердить выбранные игровые аккаунты"
+
+msgid "Remove verification"
+msgstr "Снять подтверждение"
+
+#, python-format
+msgid "Updated: %(count)d"
+msgstr "Обновлено: %(count)d"
 
 msgid "Account operation failed."
 msgstr "Не удалось выполнить операцию с аккаунтом."
@@ -47,8 +57,32 @@ msgstr "Загрузите изображение в формате JPEG, PNG и
 msgid "The image is too large."
 msgstr "Изображение слишком большое."
 
+msgid "This account is already linked to another player."
+msgstr "Этот аккаунт уже привязан к другому игроку."
+
+msgid "You already have an account for this game."
+msgstr "У вас уже есть аккаунт в этой игре."
+
+msgid "Accounts for Steam games come from your linked Steam account."
+msgstr "Аккаунты для игр Steam берутся из привязанного аккаунта Steam."
+
+msgid "Choose a region of this game."
+msgstr "Выберите регион этой игры."
+
+msgid "Only staff can verify game accounts."
+msgstr "Подтверждать игровые аккаунты могут только сотрудники."
+
 msgid "Nickname"
 msgstr "Ник"
+
+msgid "Game"
+msgstr "Игра"
+
+msgid "Riot ID or BattleTag"
+msgstr "Riot ID или BattleTag"
+
+msgid "Region"
+msgstr "Регион"
 
 msgid "email address"
 msgstr "адрес электронной почты"
@@ -80,6 +114,30 @@ msgstr "профиль"
 msgid "profiles"
 msgstr "профили"
 
+msgid "game"
+msgstr "дисциплина"
+
+msgid "account id"
+msgstr "идентификатор аккаунта"
+
+msgid "region"
+msgstr "регион"
+
+msgid "verified"
+msgstr "подтверждён"
+
+msgid "verified by"
+msgstr "кем подтверждён"
+
+msgid "verified at"
+msgstr "когда подтверждён"
+
+msgid "game account"
+msgstr "игровой аккаунт"
+
+msgid "game accounts"
+msgstr "игровые аккаунты"
+
 msgid ""
 "Nickname must be 3 to 20 characters long and contain only Latin letters, "
 "digits, underscores and hyphens."
@@ -90,8 +148,20 @@ msgstr ""
 msgid "Unknown time zone."
 msgstr "Неизвестный часовой пояс."
 
+msgid "Enter a Riot ID in the form Name#TAG."
+msgstr "Введите Riot ID в формате Имя#ТЕГ."
+
+msgid "Enter a BattleTag in the form Name#1234."
+msgstr "Введите BattleTag в формате Имя#1234."
+
+msgid "Enter a valid SteamID64."
+msgstr "Введите корректный SteamID64."
+
 msgid "Profile saved."
 msgstr "Профиль сохранён."
+
+msgid "Game account added. It will be verified by a moderator."
+msgstr "Игровой аккаунт добавлен. Его проверит модератор."
 
 msgid "Solo"
 msgstr "Соло"
@@ -129,11 +199,32 @@ msgstr "проверка результата"
 msgid "active"
 msgstr "активна"
 
-msgid "game"
-msgstr "дисциплина"
-
 msgid "games"
 msgstr "дисциплины"
+
+msgid "Europe"
+msgstr "Европа"
+
+msgid "CIS"
+msgstr "СНГ"
+
+msgid "North America"
+msgstr "Северная Америка"
+
+msgid "South America"
+msgstr "Южная Америка"
+
+msgid "Asia"
+msgstr "Азия"
+
+msgid "Oceania"
+msgstr "Океания"
+
+msgid "Americas"
+msgstr "Америка"
+
+msgid "Asia-Pacific"
+msgstr "Азиатско-Тихоокеанский регион"
 
 msgid "Operation failed."
 msgstr "Не удалось выполнить операцию."
@@ -143,6 +234,30 @@ msgstr "Русский"
 
 msgid "English"
 msgstr "Английский"
+
+msgid "Game accounts"
+msgstr "Игровые аккаунты"
+
+msgid "awaiting verification"
+msgstr "ожидает проверки"
+
+msgid "Remove"
+msgstr "Удалить"
+
+msgid "No game accounts yet."
+msgstr "Игровых аккаунтов пока нет."
+
+#, python-format
+msgid ""
+"CS2 and Dota 2 accounts are added automatically when you <a "
+"href=\"%(connections_url)s\">link Steam</a>."
+msgstr "Аккаунты CS2 и Dota 2 добавляются автоматически, когда вы <a href=\"%(connections_url)s\">привязываете Steam</a>."
+
+msgid "Add Riot ID or BattleTag"
+msgstr "Добавить Riot ID или BattleTag"
+
+msgid "Add"
+msgstr "Добавить"
 
 msgid "Profile"
 msgstr "Профиль"
