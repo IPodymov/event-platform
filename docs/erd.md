@@ -1,6 +1,6 @@
 # Модель данных (ERD)
 
-Схема разбита на три диаграммы по доменам. Поля — минимальный набор из `CLAUDE.md` (раздел 5) плюс служебные. `id` (bigint) и `created_at`/`updated_at` подразумеваются у всех таблиц и показаны только там, где важны для логики. Все суммы в деньгах хранятся в копейках (`bigint`), все даты — в UTC.
+Схема разбита на три диаграммы по доменам. Поля — минимальный набор из `CLAUDE.md` (раздел 5) плюс служебные. `id` (bigint) и `created_at`/`updated_at` подразумеваются у всех таблиц и показаны только там, где важны для логики. Все суммы в деньгах хранятся в копейках (`bigint`), валюта одна — RUB, все даты — в UTC.
 
 ## 1. Пользователи, дисциплины, команды, турниры
 
@@ -327,7 +327,6 @@ erDiagram
         bigint user_id FK "nullable"
         bigint tournament_id FK "null = platform bank"
         bigint amount "kopecks"
-        string currency
         bool is_anonymous
         text comment
         string provider "yookassa | stripe"
@@ -336,7 +335,6 @@ erDiagram
     }
     LedgerAccount {
         string code UK "provider_clearing, platform_bank, tournament_pool:<id>, ..."
-        string currency
         bigint cached_balance "derived, reconciled from entries"
     }
     LedgerTransaction {
@@ -355,7 +353,6 @@ erDiagram
     PrizePool {
         bigint tournament_id FK
         bigint target_amount "nullable"
-        string currency
         string status "collecting | locked | distributed | paid | refunded"
     }
     PrizePlace {
@@ -394,4 +391,3 @@ erDiagram
 
 ## Открытые вопросы
 - `TeamMembership.game_id` (денормализация под уникальный индекс «одна активная команда на дисциплину») — решить в задаче «Управление составом».
-- Валюта: одна (RUB) на MVP или мультивалютность с первого дня (Stripe для зарубежных карт).
