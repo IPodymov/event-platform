@@ -94,3 +94,22 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "media/"
 MEDIA_ROOT = env.path("DJANGO_MEDIA_ROOT", default=BASE_DIR / "media")
+
+REDIS_URL = env("REDIS_URL", default="redis://localhost:6379/0")
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": env("CACHE_URL", default=REDIS_URL),
+    }
+}
+
+# Celery
+CELERY_BROKER_URL = env("CELERY_BROKER_URL", default=REDIS_URL)
+CELERY_RESULT_BACKEND = None
+CELERY_TIMEZONE = "UTC"
+CELERY_TASK_ACKS_LATE = True
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+CELERY_TASK_TIME_LIMIT = 5 * 60
+CELERY_TASK_SOFT_TIME_LIMIT = 4 * 60
+# Periodic tasks (status transitions, auto-confirmations) are registered here by later sprints.
+CELERY_BEAT_SCHEDULE: dict[str, dict[str, object]] = {}

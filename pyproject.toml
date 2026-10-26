@@ -4,9 +4,12 @@ version = "0.1.0"
 description = "Esports tournament platform"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "celery>=5.5,<6",
     "django>=5.2,<6.0",
     "django-environ>=0.12",
+    "gunicorn>=23",
     "psycopg[binary]>=3.2",
+    "redis>=6",
 ]
 
 [tool.uv]
@@ -14,6 +17,7 @@ package = false
 
 [dependency-groups]
 dev = [
+    "celery-types>=0.26.0",
     "django-stubs[compatible-mypy]>=5.2,<6",
     "mypy>=1.18",
     "ruff>=0.13",
