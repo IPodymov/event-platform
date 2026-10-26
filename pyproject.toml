@@ -48,6 +48,8 @@ select = [
     "SIM",      # simplify
     "RUF",      # ruff-specific
 ]
+# RUF012 flags Django `Meta` and DRF class attributes, which are idiomatic lists.
+ignore = ["RUF012"]
 
 [tool.ruff.lint.per-file-ignores]
 "**/tests/**" = ["S101", "S105", "S106"]
@@ -83,9 +85,9 @@ ignore_missing_imports = true
 django_settings_module = "config.settings.dev"
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "config.settings.test"
 python_files = ["test_*.py"]
-addopts = "--strict-markers --cov=apps --cov=config --cov-report=term-missing:skip-covered"
+# --ds wins over a DJANGO_SETTINGS_MODULE exported from .env.
+addopts = "--ds=config.settings.test --strict-markers --cov=apps --cov=config --cov-report=term-missing:skip-covered"
 filterwarnings = ["error::RuntimeWarning"]
 
 [tool.coverage.run]
