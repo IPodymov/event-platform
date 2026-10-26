@@ -10,12 +10,12 @@ class AccountsError(Exception):
         return str(self.message)
 
 
-class SteamAlreadyLinkedError(AccountsError):
-    message = _("Another Steam account is already linked. Unlink it first.")
+class SocialAccountAlreadyLinkedError(AccountsError):
+    message = _("Another account of this provider is already linked. Unlink it first.")
 
 
-class SteamSignupNotAllowedError(AccountsError):
+class SocialSignupNotAllowedError(AccountsError):
     message = _(
-        "This Steam account is not linked to any profile. Sign in with email "
-        "and link Steam in your account settings."
+        "This account is not linked to any profile. Sign in with email and link it "
+        "in your account settings."
     )

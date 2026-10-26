@@ -12,7 +12,7 @@ from django.urls import reverse
 from openid.consumer import consumer
 
 from apps.accounts import services
-from apps.accounts.exceptions import SteamAlreadyLinkedError, SteamSignupNotAllowedError
+from apps.accounts.exceptions import SocialAccountAlreadyLinkedError, SocialSignupNotAllowedError
 from apps.accounts.models import User
 from apps.accounts.selectors import get_steam_id
 from apps.accounts.tests.factories import UserFactory
@@ -109,7 +109,7 @@ def test_unlinked_steam_cannot_sign_up(client: Client, steam: SteamRoundTrip) ->
     assert logged_in_user_id(client) is None
     assert not User.objects.exists()
     assert not SocialAccount.objects.exists()
-    assert "Steam" in messages_text(response)
+    assert "email" in messages_text(response)
 
 
 def test_second_steam_account_is_refused(client: Client, steam: SteamRoundTrip) -> None:
@@ -146,21 +146,21 @@ def test_disconnect_steam(client: Client) -> None:
     assert get_steam_id(user) is None
 
 
-def test_validate_steam_link_allows_relinking_same_account() -> None:
+def test_validate_social_link_allows_relinking_same_account() -> None:
     user = verified_user()
     link_steam(user)
 
-    services.validate_steam_link(user=user, steam_id=STEAM_ID)
+    services.validate_social_link(user=user, provider="steam", uid=STEAM_ID)
 
-    with pytest.raises(SteamAlreadyLinkedError):
-        services.validate_steam_link(user=user, steam_id=OTHER_STEAM_ID)
+    with pytest.raises(SocialAccountAlreadyLinkedError):
+        services.validate_social_link(user=user, provider="steam", uid=OTHER_STEAM_ID)
 
 
-def test_validate_steam_login() -> None:
-    services.validate_steam_login(is_linked=True)
+def test_validate_social_login() -> None:
+    services.validate_social_login(is_linked=True)
 
-    with pytest.raises(SteamSignupNotAllowedError):
-        services.validate_steam_login(is_linked=False)
+    with pytest.raises(SocialSignupNotAllowedError):
+        services.validate_social_login(is_linked=False)
 
 
 def test_api_lists_steam_provider_and_linked_accounts(client: Client) -> None:

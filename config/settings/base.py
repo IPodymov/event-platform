@@ -28,6 +28,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.openid",
     "allauth.socialaccount.providers.steam",
+    "allauth.socialaccount.providers.discord",
     "allauth.headless",
 ]
 LOCAL_APPS = [
@@ -117,6 +118,14 @@ SOCIALACCOUNT_PROVIDERS = {
     "steam": {
         # Steam Web API key, used to fetch the persona name and avatar after OpenID login.
         "APP": {"client_id": "steam", "secret": env("STEAM_API_KEY", default="")},
+    },
+    "discord": {
+        "APP": {
+            "client_id": env("DISCORD_CLIENT_ID", default=""),
+            "secret": env("DISCORD_CLIENT_SECRET", default=""),
+        },
+        # Only the Discord user id is needed (notifications); email comes from our own signup.
+        "SCOPE": ["identify"],
     },
 }
 
