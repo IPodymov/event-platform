@@ -1,3 +1,4 @@
+from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialAccount
 from django.db.models import Prefetch, QuerySet
 
@@ -24,6 +25,10 @@ def get_steam_id(user: User) -> str | None:
 def get_discord_id(user: User) -> str | None:
     """Return the Discord user id linked to the user, if any."""
     return get_social_uid(user, DISCORD_PROVIDER)
+
+
+def has_verified_email(user: User) -> bool:
+    return EmailAddress.objects.filter(user=user, verified=True).exists()
 
 
 def is_nickname_taken(nickname: str, *, exclude_profile_id: int | None = None) -> bool:

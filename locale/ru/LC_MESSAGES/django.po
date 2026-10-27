@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tournament-platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 08:02+0000\n"
+"POT-Creation-Date: 2026-10-27 08:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -149,6 +149,7 @@ msgstr "профили"
 
 #: apps/accounts/models.py:110 apps/games/models.py:51 apps/games/models.py:99
 #: apps/teams/models.py:22 apps/teams/models.py:90
+#: apps/tournaments/models.py:34
 msgid "game"
 msgstr "дисциплина"
 
@@ -156,7 +157,7 @@ msgstr "дисциплина"
 msgid "account id"
 msgstr "идентификатор аккаунта"
 
-#: apps/accounts/models.py:113
+#: apps/accounts/models.py:113 apps/tournaments/models.py:44
 msgid "region"
 msgstr "регион"
 
@@ -528,7 +529,7 @@ msgstr "приглашённый"
 msgid "token"
 msgstr "токен"
 
-#: apps/teams/models.py:158
+#: apps/teams/models.py:158 apps/tournaments/models.py:58
 msgid "status"
 msgstr "статус"
 
@@ -557,7 +558,9 @@ msgstr "приглашения в команды"
 msgid ""
 "Link your %(game)s account in the profile settings: without it the team "
 "cannot register for tournaments."
-msgstr "Привяжите аккаунт %(game)s в настройках профиля: без него команду не получится зарегистрировать на турнир."
+msgstr ""
+"Привяжите аккаунт %(game)s в настройках профиля: без него команду не "
+"получится зарегистрировать на турнир."
 
 #: apps/teams/views.py:52
 msgid "Team created."
@@ -578,6 +581,174 @@ msgstr "Вы вступили в команду."
 #: apps/teams/views.py:168
 msgid "You left the team."
 msgstr "Вы покинули команду."
+
+#: apps/tournaments/exceptions.py:10
+msgid "Tournament operation failed."
+msgstr "Не удалось выполнить операцию с турниром."
+
+#: apps/tournaments/exceptions.py:14
+msgid "Confirm your email address to organize tournaments."
+msgstr "Подтвердите email, чтобы проводить турниры."
+
+#: apps/tournaments/exceptions.py:18
+msgid "Only the tournament organizer can do this."
+msgstr "Это может сделать только организатор турнира."
+
+#: apps/tournaments/exceptions.py:22
+msgid "This discipline is not available."
+msgstr "Эта дисциплина недоступна."
+
+#: apps/tournaments/exceptions.py:27
+msgid "This region is not available for the discipline."
+msgstr "Этот регион недоступен для дисциплины."
+
+#: apps/tournaments/exceptions.py:32
+msgid "This series format is not allowed for the discipline."
+msgstr "Этот формат серии недоступен для дисциплины."
+
+#: apps/tournaments/exceptions.py:37
+msgid "Check the tournament dates."
+msgstr "Проверьте даты турнира."
+
+#: apps/tournaments/exceptions.py:41
+msgid "Registration must open before it closes."
+msgstr "Регистрация должна открываться раньше, чем закрываться."
+
+#: apps/tournaments/exceptions.py:46
+msgid "Check-in cannot open before registration closes."
+msgstr "Check-in не может начаться до закрытия регистрации."
+
+#: apps/tournaments/exceptions.py:51
+msgid "Check-in must open before the tournament starts."
+msgstr "Check-in должен начаться до старта турнира."
+
+#: apps/tournaments/exceptions.py:56
+msgid "Registration must close in the future."
+msgstr "Регистрация должна закрываться в будущем."
+
+#: apps/tournaments/exceptions.py:61
+msgid "The tournament cannot move to this status."
+msgstr "Турнир нельзя перевести в этот статус."
+
+#: apps/tournaments/exceptions.py:66
+msgid "The tournament is already published."
+msgstr "Турнир уже опубликован."
+
+#: apps/tournaments/exceptions.py:70
+msgid "These settings can no longer be changed."
+msgstr "Эти настройки уже нельзя изменить."
+
+#: apps/tournaments/models.py:16
+msgid "Draft"
+msgstr "Черновик"
+
+#: apps/tournaments/models.py:17
+msgid "Registration open"
+msgstr "Регистрация открыта"
+
+#: apps/tournaments/models.py:18
+msgid "Registration closed"
+msgstr "Регистрация закрыта"
+
+#: apps/tournaments/models.py:19
+msgid "Check-in"
+msgstr "Check-in"
+
+#: apps/tournaments/models.py:20
+msgid "In progress"
+msgstr "Идёт"
+
+#: apps/tournaments/models.py:21
+msgid "Completed"
+msgstr "Завершён"
+
+#: apps/tournaments/models.py:22
+msgid "Cancelled"
+msgstr "Отменён"
+
+#: apps/tournaments/models.py:26
+msgid "Single elimination"
+msgstr "Single Elimination"
+
+#: apps/tournaments/models.py:27
+msgid "Double elimination"
+msgstr "Double Elimination"
+
+#: apps/tournaments/models.py:28
+msgid "Round robin"
+msgstr "Round Robin"
+
+#: apps/tournaments/models.py:29
+msgid "Swiss"
+msgstr "Швейцарская система"
+
+#: apps/tournaments/models.py:40
+msgid "organizer"
+msgstr "организатор"
+
+#: apps/tournaments/models.py:42
+msgid "title"
+msgstr "название"
+
+#: apps/tournaments/models.py:43
+msgid "rules"
+msgstr "правила"
+
+#: apps/tournaments/models.py:46
+msgid "max participants"
+msgstr "максимум участников"
+
+#: apps/tournaments/models.py:51
+msgid "series format"
+msgstr "формат серии"
+
+#: apps/tournaments/models.py:53
+msgid "registration opens at"
+msgstr "открытие регистрации"
+
+#: apps/tournaments/models.py:54
+msgid "registration closes at"
+msgstr "закрытие регистрации"
+
+#: apps/tournaments/models.py:55
+msgid "check-in opens at"
+msgstr "начало check-in"
+
+#: apps/tournaments/models.py:56
+msgid "starts at"
+msgstr "старт"
+
+#: apps/tournaments/models.py:65
+msgid "published at"
+msgstr "опубликован"
+
+#: apps/tournaments/models.py:70 apps/tournaments/models.py:104
+msgid "tournament"
+msgstr "турнир"
+
+#: apps/tournaments/models.py:71
+msgid "tournaments"
+msgstr "турниры"
+
+#: apps/tournaments/models.py:106
+msgid "order"
+msgstr "порядок"
+
+#: apps/tournaments/models.py:107
+msgid "format"
+msgstr "формат"
+
+#: apps/tournaments/models.py:109
+msgid "settings"
+msgstr "настройки"
+
+#: apps/tournaments/models.py:113
+msgid "stage"
+msgstr "этап"
+
+#: apps/tournaments/models.py:114
+msgid "stages"
+msgstr "этапы"
 
 #: config/exceptions.py:16
 msgid "Operation failed."
@@ -752,7 +923,9 @@ msgstr "Приглашение в команду"
 msgid ""
 "You have no %(game)s account linked. You can join, but the team cannot "
 "register for tournaments until you link one."
-msgstr "У вас не привязан аккаунт %(game)s. Вступить в команду можно, но зарегистрировать её на турнир не получится, пока вы его не привяжете."
+msgstr ""
+"У вас не привязан аккаунт %(game)s. Вступить в команду можно, но "
+"зарегистрировать её на турнир не получится, пока вы его не привяжете."
 
 #: templates/teams/invite_detail.html:20 templates/teams/team_detail.html:19
 msgid "Link an account"
@@ -799,7 +972,9 @@ msgstr "Команда распущена."
 msgid ""
 "You have no %(game)s account linked. Without it the team cannot register for "
 "tournaments."
-msgstr "У вас не привязан аккаунт %(game)s. Без него команду не получится зарегистрировать на турнир."
+msgstr ""
+"У вас не привязан аккаунт %(game)s. Без него команду не получится "
+"зарегистрировать на турнир."
 
 #: templates/teams/team_detail.html:21
 #, python-format
@@ -809,10 +984,18 @@ msgid ""
 msgid_plural ""
 "%(counter)s members have no %(game)s account. The team cannot register for "
 "tournaments until every member links one."
-msgstr[0] "У %(counter)s участника нет аккаунта %(game)s. Команду не получится зарегистрировать на турнир, пока аккаунт не привяжут все."
-msgstr[1] "У %(counter)s участников нет аккаунта %(game)s. Команду не получится зарегистрировать на турнир, пока аккаунт не привяжут все."
-msgstr[2] "У %(counter)s участников нет аккаунта %(game)s. Команду не получится зарегистрировать на турнир, пока аккаунт не привяжут все."
-msgstr[3] "У %(counter)s участника нет аккаунта %(game)s. Команду не получится зарегистрировать на турнир, пока аккаунт не привяжут все."
+msgstr[0] ""
+"У %(counter)s участника нет аккаунта %(game)s. Команду не получится "
+"зарегистрировать на турнир, пока аккаунт не привяжут все."
+msgstr[1] ""
+"У %(counter)s участников нет аккаунта %(game)s. Команду не получится "
+"зарегистрировать на турнир, пока аккаунт не привяжут все."
+msgstr[2] ""
+"У %(counter)s участников нет аккаунта %(game)s. Команду не получится "
+"зарегистрировать на турнир, пока аккаунт не привяжут все."
+msgstr[3] ""
+"У %(counter)s участника нет аккаунта %(game)s. Команду не получится "
+"зарегистрировать на турнир, пока аккаунт не привяжут все."
 
 #: templates/teams/team_detail.html:26
 msgid "Roster"

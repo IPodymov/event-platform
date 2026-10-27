@@ -203,8 +203,13 @@ CELERY_TASK_ACKS_LATE = True
 CELERY_WORKER_PREFETCH_MULTIPLIER = 1
 CELERY_TASK_TIME_LIMIT = 5 * 60
 CELERY_TASK_SOFT_TIME_LIMIT = 4 * 60
-# Periodic tasks (status transitions, auto-confirmations) are registered here by later sprints.
-CELERY_BEAT_SCHEDULE: dict[str, dict[str, object]] = {}
+# Periodic tasks; each one is idempotent, so a missed or repeated run is harmless.
+CELERY_BEAT_SCHEDULE: dict[str, dict[str, object]] = {
+    "tournaments-sync-registration": {
+        "task": "apps.tournaments.tasks.sync_registration_statuses",
+        "schedule": 60.0,
+    },
+}
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -230,5 +235,8 @@ SPECTACULAR_SETTINGS = {
         "TeamRoleEnum": "apps.teams.models.TeamRole",
         "InviteRoleEnum": "apps.teams.models.INVITE_ROLES",
         "RosterAccountStatusEnum": "apps.teams.models.RosterAccountStatus",
+        "TournamentStatusEnum": "apps.tournaments.models.TournamentStatus",
+        "StageFormatEnum": "apps.tournaments.models.StageFormat",
+        "SeriesFormatEnum": "apps.games.models.SeriesFormat",
     },
 }

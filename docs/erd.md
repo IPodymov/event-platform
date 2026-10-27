@@ -105,12 +105,13 @@ erDiagram
         text rules
         string region
         int max_participants
-        string series_format
+        int series_format "1 | 3 | 5"
         datetime registration_opens_at
         datetime registration_closes_at
         datetime checkin_opens_at
         datetime starts_at
         string status "draft ... completed | cancelled"
+        datetime published_at "null = private draft"
     }
     TournamentStaff {
         bigint tournament_id FK
