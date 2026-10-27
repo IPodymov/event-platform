@@ -1,7 +1,10 @@
-# Local development stack. Migrations are run explicitly:
+# Local development stack. Start it with ./scripts/dev.sh (Ctrl+C stops it and frees
+# the ports). Migrations are run explicitly:
 #   docker compose run --rm web python manage.py migrate
 
 x-app: &app
+  # tini as PID 1 forwards stop signals to Django/Celery and reaps child processes.
+  init: true
   build:
     context: .
     args:
