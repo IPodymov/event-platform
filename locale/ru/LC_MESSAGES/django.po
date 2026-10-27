@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tournament-platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 04:29+0000\n"
+"POT-Creation-Date: 2026-10-27 04:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -256,6 +256,78 @@ msgstr "Америка"
 msgid "Asia-Pacific"
 msgstr "Азиатско-Тихоокеанский регион"
 
+msgid "Team operation failed."
+msgstr "Не удалось выполнить операцию с командой."
+
+msgid "Teams can only be created in team disciplines."
+msgstr "Команды можно создавать только в командных дисциплинах."
+
+msgid "You are already in a team of this game."
+msgstr "Вы уже состоите в команде этой дисциплины."
+
+msgid "A team with this name already exists."
+msgstr "Команда с таким названием уже существует."
+
+msgid "A team with this tag already exists."
+msgstr "Команда с таким тегом уже существует."
+
+msgid "Name"
+msgstr "Название"
+
+msgid "Tag"
+msgstr "Тег"
+
+msgid "Logo"
+msgstr "Логотип"
+
+msgid "Tag must be 2 to 5 Latin letters or digits."
+msgstr "Тег должен состоять из 2–5 латинских букв или цифр."
+
+msgid "tag"
+msgstr "тег"
+
+msgid "logo"
+msgstr "логотип"
+
+msgid "captain"
+msgstr "капитан"
+
+msgid "team"
+msgstr "команда"
+
+msgid "teams"
+msgstr "команды"
+
+msgid "Captain"
+msgstr "Капитан"
+
+msgid "Player"
+msgstr "Игрок"
+
+msgid "Substitute"
+msgstr "Запасной"
+
+msgid "role"
+msgstr "роль"
+
+msgid "joined at"
+msgstr "вступил"
+
+msgid "left at"
+msgstr "покинул"
+
+msgid "team membership"
+msgstr "участие в команде"
+
+msgid "team memberships"
+msgstr "участие в командах"
+
+msgid "The player is already in a team of this game."
+msgstr "Игрок уже состоит в команде этой дисциплины."
+
+msgid "Team created."
+msgstr "Команда создана."
+
 msgid "Operation failed."
 msgstr "Не удалось выполнить операцию."
 
@@ -303,3 +375,12 @@ msgstr "Турниры"
 #, python-format
 msgid "Signed in as %(email)s."
 msgstr "Вы вошли как %(email)s."
+
+msgid "New team"
+msgstr "Новая команда"
+
+msgid "Create"
+msgstr "Создать"
+
+msgid "Roster"
+msgstr "Состав"

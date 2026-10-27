@@ -86,6 +86,7 @@ erDiagram
     TeamMembership {
         bigint team_id FK
         bigint user_id FK
+        bigint game_id FK "copy of team.game"
         string role "captain | player | substitute"
         datetime joined_at
         datetime left_at "null = active"
@@ -145,7 +146,8 @@ erDiagram
 
 Ключевые ограничения:
 - `GameAccount`: `UNIQUE(game, external_id)`.
-- `TeamMembership`: частичный уникальный индекс — одна активная (`left_at IS NULL`) команда на игрока в дисциплине. Дисциплина хранится в `Team`, поэтому проверка в сервисе + денормализованное поле `game_id` в membership под уникальный индекс.
+- `TeamMembership`: денормализованное `game_id` и частичный уникальный индекс `(user, game) WHERE left_at IS NULL` — одна активная команда игрока в дисциплине; один активный капитан в команде.
+- `Team`: `UNIQUE(game, lower(name))`, `UNIQUE(game, lower(tag))`.
 - `Registration`: `CHECK ((team_id IS NULL) <> (user_id IS NULL))`; `UNIQUE(tournament, team)` и `UNIQUE(tournament, user)`.
 - `Stage`: `UNIQUE(tournament, order)`.
 - `HearthstoneDeck`: `UNIQUE(registration, hero_class)`.
@@ -389,5 +391,4 @@ erDiagram
 - `Donation.provider_payment_id` уникален — основа идемпотентности вебхуков.
 - `PrizePlace`: `UNIQUE(prize_pool, place)`.
 
-## Открытые вопросы
-- `TeamMembership.game_id` (денормализация под уникальный индекс «одна активная команда на дисциплину») — решить в задаче «Управление составом».
+Открытые вопросы и принятые решения ведутся в `docs/decisions.md`.

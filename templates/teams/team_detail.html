@@ -1,0 +1,17 @@
+{% extends "allauth/layouts/base.html" %}
+{% load i18n %}
+{% block head_title %}{{ team }}{% endblock head_title %}
+{% block content %}
+    <h1>[{{ team.tag }}] {{ team.name }}</h1>
+    {% if team.logo %}<img src="{{ team.logo.url }}" alt="{{ team.name }}" width="128" height="128">{% endif %}
+    <p>{{ team.game.name }}</p>
+    <h2>{% translate "Roster" %}</h2>
+    <ul>
+        {% for member in team.roster %}
+            <li>
+                <a href="{% url 'accounts:public_profile' member.user.profile.nickname %}">{{ member.user.profile.nickname }}</a>
+                — {{ member.get_role_display }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock content %}

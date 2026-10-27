@@ -1,0 +1,11 @@
+{% extends "allauth/layouts/base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "New team" %}{% endblock head_title %}
+{% block content %}
+    <h1>{% translate "New team" %}</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">{% translate "Create" %}</button>
+    </form>
+{% endblock content %}
