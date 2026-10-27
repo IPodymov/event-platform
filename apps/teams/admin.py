@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.teams.models import Team, TeamMembership
+from apps.teams.models import Team, TeamInvite, TeamMembership
 
 
 class TeamMembershipInline(admin.TabularInline[TeamMembership, Team]):
@@ -23,3 +23,15 @@ class TeamAdmin(admin.ModelAdmin[Team]):
     list_select_related = ("game", "captain")
     readonly_fields = ("game", "captain", "created_at", "updated_at")
     inlines = (TeamMembershipInline,)
+
+
+@admin.register(TeamInvite)
+class TeamInviteAdmin(admin.ModelAdmin[TeamInvite]):
+    list_display = ("team", "invitee", "role", "status", "created_at", "expires_at")
+    list_filter = ("status", "role")
+    list_select_related = ("team", "invitee")
+    # Invites change state through services only.
+    readonly_fields = [f.name for f in TeamInvite._meta.fields]
+
+    def has_add_permission(self, request: object) -> bool:
+        return False

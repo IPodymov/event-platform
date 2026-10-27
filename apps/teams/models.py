@@ -103,3 +103,71 @@ class TeamMembership(models.Model):
     @property
     def is_active(self) -> bool:
         return self.left_at is None
+
+
+# Roles a player can be invited to; the captain role is only transferred.
+INVITE_ROLES = [
+    (TeamRole.PLAYER.value, TeamRole.PLAYER.label),
+    (TeamRole.SUBSTITUTE.value, TeamRole.SUBSTITUTE.label),
+]
+
+
+class InviteStatus(models.TextChoices):
+    PENDING = "pending", _("Pending")
+    ACCEPTED = "accepted", _("Accepted")
+    DECLINED = "declined", _("Declined")
+    REVOKED = "revoked", _("Revoked")
+
+
+class TeamInvite(models.Model):
+    """An invitation to a team: personal (``invitee`` set) or a shareable link."""
+
+    team = models.ForeignKey(
+        Team, on_delete=models.CASCADE, related_name="invites", verbose_name=_("team")
+    )
+    invitee = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="team_invites",
+        verbose_name=_("invitee"),
+    )
+    token = models.CharField(_("token"), max_length=64, unique=True)
+    role = models.CharField(
+        _("role"),
+        max_length=20,
+        choices=INVITE_ROLES,
+        default=TeamRole.PLAYER,
+    )
+    status = models.CharField(
+        _("status"), max_length=20, choices=InviteStatus.choices, default=InviteStatus.PENDING
+    )
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="+",
+        verbose_name=_("created by"),
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField(_("expires at"))
+    responded_at = models.DateTimeField(_("responded at"), null=True, blank=True)
+
+    class Meta:
+        verbose_name = _("team invite")
+        verbose_name_plural = _("team invites")
+        ordering = ("-created_at",)
+        constraints = [
+            models.UniqueConstraint(
+                fields=("team", "invitee"),
+                condition=Q(status="pending", invitee__isnull=False),
+                name="teams_invite_one_pending_per_invitee",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return f"Invite to {self.team_id} ({self.status})"
+
+    @property
+    def is_link(self) -> bool:
+        return self.invitee_id is None

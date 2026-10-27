@@ -171,6 +171,7 @@ UPLOAD_IMAGE_MAX_BYTES = 5 * 1024 * 1024
 UPLOAD_IMAGE_MAX_PIXELS = 25_000_000
 AVATAR_SIZE = 512
 TEAM_LOGO_SIZE = 256
+TEAM_INVITE_TTL_DAYS = 7
 # Python 3.12 does not know WebP; needed for correct Content-Type on images.
 mimetypes.add_type("image/webp", ".webp")
 

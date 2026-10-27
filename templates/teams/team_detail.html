@@ -14,4 +14,24 @@
             </li>
         {% endfor %}
     </ul>
+    {% if invite_form %}
+        <h2>{% translate "Invitations" %}</h2>
+        <ul>
+            {% for invite in invites %}
+                <li>
+                    {% if invite.invitee %}{{ invite.invitee.profile.nickname }}{% else %}{% translate "Link" %}: {{ request.scheme }}://{{ request.get_host }}{% url 'teams:invite' invite.token %}{% endif %}
+                    — {{ invite.get_role_display }}, {% translate "until" %} {{ invite.expires_at|date:"SHORT_DATETIME_FORMAT" }}
+                    <form method="post" action="{% url 'teams:invite_revoke' team.pk invite.pk %}">
+                        {% csrf_token %}
+                        <button type="submit">{% translate "Revoke" %}</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+        <form method="post" action="{% url 'teams:invite_create' team.pk %}">
+            {% csrf_token %}
+            {{ invite_form.as_p }}
+            <button type="submit">{% translate "Invite" %}</button>
+        </form>
+    {% endif %}
 {% endblock content %}

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tournament-platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 04:32+0000\n"
+"POT-Creation-Date: 2026-10-27 04:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -271,6 +271,27 @@ msgstr "Команда с таким названием уже существу�
 msgid "A team with this tag already exists."
 msgstr "Команда с таким тегом уже существует."
 
+msgid "Only the team captain can do this."
+msgstr "Это может сделать только капитан команды."
+
+msgid "This invitation is addressed to another player."
+msgstr "Это приглашение адресовано другому игроку."
+
+msgid "No player with this nickname."
+msgstr "Игрока с таким ником нет."
+
+msgid "This player already has a pending invitation to the team."
+msgstr "У этого игрока уже есть действующее приглашение в команду."
+
+msgid "This player is already in the team."
+msgstr "Этот игрок уже в команде."
+
+msgid "This invitation is no longer valid."
+msgstr "Это приглашение больше не действует."
+
+msgid "The team has no free slot for this role."
+msgstr "В команде нет свободного места для этой роли."
+
 msgid "Name"
 msgstr "Название"
 
@@ -279,6 +300,15 @@ msgstr "Тег"
 
 msgid "Logo"
 msgstr "Логотип"
+
+msgid "Player nickname"
+msgstr "Ник игрока"
+
+msgid "Leave empty to create a shareable link."
+msgstr "Оставьте пустым, чтобы создать ссылку-приглашение."
+
+msgid "Role"
+msgstr "Роль"
 
 msgid "Tag must be 2 to 5 Latin letters or digits."
 msgstr "Тег должен состоять из 2–5 латинских букв или цифр."
@@ -325,11 +355,59 @@ msgstr "участие в командах"
 msgid "The player is already in a team of this game."
 msgstr "Игрок уже состоит в команде этой дисциплины."
 
+msgid "Pending"
+msgstr "Ожидает ответа"
+
+msgid "Accepted"
+msgstr "Принято"
+
+msgid "Declined"
+msgstr "Отклонено"
+
+msgid "Revoked"
+msgstr "Отозвано"
+
+msgid "invitee"
+msgstr "приглашённый"
+
+msgid "token"
+msgstr "токен"
+
+msgid "status"
+msgstr "статус"
+
+msgid "created by"
+msgstr "кем создано"
+
+msgid "expires at"
+msgstr "действует до"
+
+msgid "responded at"
+msgstr "дата ответа"
+
+msgid "team invite"
+msgstr "приглашение в команду"
+
+msgid "team invites"
+msgstr "приглашения в команды"
+
 msgid "Team created."
 msgstr "Команда создана."
 
+msgid "Invitation created."
+msgstr "Приглашение создано."
+
+msgid "Invitation declined."
+msgstr "Приглашение отклонено."
+
+msgid "You joined the team."
+msgstr "Вы вступили в команду."
+
 msgid "Operation failed."
 msgstr "Не удалось выполнить операцию."
+
+msgid "You do not have permission to perform this action."
+msgstr "У вас нет прав на это действие."
 
 msgid "Russian"
 msgstr "Русский"
@@ -376,6 +454,25 @@ msgstr "Турниры"
 msgid "Signed in as %(email)s."
 msgstr "Вы вошли как %(email)s."
 
+msgid "Team invitation"
+msgstr "Приглашение в команду"
+
+#, python-format
+msgid "Invitation to %(team)s"
+msgstr "Приглашение в %(team)s"
+
+msgid "Accept"
+msgstr "Принять"
+
+msgid "Decline"
+msgstr "Отклонить"
+
+msgid "My invitations"
+msgstr "Мои приглашения"
+
+msgid "No invitations."
+msgstr "Приглашений нет."
+
 msgid "New team"
 msgstr "Новая команда"
 
@@ -384,3 +481,18 @@ msgstr "Создать"
 
 msgid "Roster"
 msgstr "Состав"
+
+msgid "Invitations"
+msgstr "Приглашения"
+
+msgid "Link"
+msgstr "Ссылка"
+
+msgid "until"
+msgstr "до"
+
+msgid "Revoke"
+msgstr "Отозвать"
+
+msgid "Invite"
+msgstr "Пригласить"

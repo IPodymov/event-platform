@@ -1,10 +1,18 @@
 from django.urls import path
 
-from apps.teams.views import TeamCreateView, team_detail
+from apps.teams import views
 
 app_name = "teams"
 
 urlpatterns = [
-    path("teams/new/", TeamCreateView.as_view(), name="create"),
-    path("teams/<int:pk>/", team_detail, name="detail"),
+    path("teams/new/", views.TeamCreateView.as_view(), name="create"),
+    path("teams/<int:pk>/", views.team_detail, name="detail"),
+    path("teams/<int:pk>/invites/", views.team_invite_create, name="invite_create"),
+    path(
+        "teams/<int:pk>/invites/<int:invite_id>/revoke/",
+        views.team_invite_revoke,
+        name="invite_revoke",
+    ),
+    path("invites/<str:token>/", views.invite_detail, name="invite"),
+    path("profile/invites/", views.my_invites, name="my_invites"),
 ]

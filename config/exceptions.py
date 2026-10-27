@@ -20,9 +20,17 @@ class DomainError(Exception):
         return str(self.message)
 
 
+class DomainPermissionError(DomainError):
+    """The user may not perform this action (rendered as 403 by the API)."""
+
+    message: StrOrPromise = _("You do not have permission to perform this action.")
+
+
 def api_exception_handler(exc: Exception, context: dict[str, Any]) -> Response | None:
-    """Render domain errors as 400 validation errors."""
-    if isinstance(exc, DomainError):
+    """Render domain permission errors as 403 and other domain errors as 400."""
+    if isinstance(exc, DomainPermissionError):
+        exc = exceptions.PermissionDenied(str(exc))
+    elif isinstance(exc, DomainError):
         detail = {exc.field: [str(exc)]} if exc.field else [str(exc)]
         exc = exceptions.ValidationError(detail)
     return views.exception_handler(exc, context)

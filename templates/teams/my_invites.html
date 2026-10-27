@@ -1,0 +1,13 @@
+{% extends "allauth/layouts/base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "My invitations" %}{% endblock head_title %}
+{% block content %}
+    <h1>{% translate "My invitations" %}</h1>
+    <ul>
+        {% for invite in invites %}
+            <li><a href="{% url 'teams:invite' invite.token %}">{{ invite.team }}</a> ({{ invite.team.game.name }})</li>
+        {% empty %}
+            <li>{% translate "No invitations." %}</li>
+        {% endfor %}
+    </ul>
+{% endblock content %}

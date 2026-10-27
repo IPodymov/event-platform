@@ -1,20 +1,38 @@
+import secrets
+from datetime import timedelta
+
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import UploadedFile
 from django.db import IntegrityError, transaction
+from django.utils import timezone
 
-from apps.accounts.models import User
+from apps.accounts.models import Profile, User
 from apps.games.models import Game
 from apps.teams.exceptions import (
     AlreadyInTeamError,
+    AlreadyInvitedError,
+    AlreadyMemberError,
     InvalidLogoError,
+    InviteNotActiveError,
     LogoTooLargeError,
     NotATeamGameError,
+    NotInviteeError,
+    NotTeamCaptainError,
+    PlayerNotFoundError,
+    RosterFullError,
     TeamNameTakenError,
     TeamTagTakenError,
 )
-from apps.teams.models import Team, TeamMembership, TeamRole
-from apps.teams.selectors import has_active_team, is_team_name_taken, is_team_tag_taken
+from apps.teams.models import InviteStatus, Team, TeamInvite, TeamMembership, TeamRole
+from apps.teams.selectors import (
+    count_active_roles,
+    has_active_team,
+    is_team_member,
+    is_team_name_taken,
+    is_team_tag_taken,
+    pending_invites,
+)
 from config.images import ImageTooLargeError, InvalidImageError, reencode_image
 
 
@@ -59,3 +77,103 @@ def team_create(
             raise TeamTagTakenError from error
         raise TeamNameTakenError from error
     return team
+
+
+def _role_capacity(game: Game, role: str) -> int:
+    # The captain plays in the main roster.
+    return game.roster_size if role in (TeamRole.PLAYER, TeamRole.CAPTAIN) else game.max_substitutes
+
+
+def _has_free_slot(team: Team, role: str) -> bool:
+    counts = count_active_roles(team)
+    taken = counts.get(TeamRole.SUBSTITUTE, 0)
+    if role != TeamRole.SUBSTITUTE:
+        taken = counts.get(TeamRole.PLAYER, 0) + counts.get(TeamRole.CAPTAIN, 0)
+    return taken < _role_capacity(team.game, role)
+
+
+def _ensure_captain(team: Team, user: User) -> None:
+    if team.captain_id != user.pk:
+        raise NotTeamCaptainError
+
+
+def _ensure_pending(invite: TeamInvite) -> None:
+    if invite.status != InviteStatus.PENDING or invite.expires_at <= timezone.now():
+        raise InviteNotActiveError
+
+
+def invite_create(
+    *, by: User, team: Team, role: str = TeamRole.PLAYER, nickname: str | None = None
+) -> TeamInvite:
+    """Invite a player by nickname, or create a shareable link when ``nickname`` is empty."""
+    _ensure_captain(team, by)
+    invitee: User | None = None
+    if nickname:
+        profile = Profile.objects.select_related("user").filter(nickname__iexact=nickname).first()
+        if profile is None or not profile.user.is_active:
+            raise PlayerNotFoundError
+        invitee = profile.user
+        if is_team_member(team, invitee):
+            raise AlreadyMemberError
+        if pending_invites().filter(team=team, invitee=invitee).exists():
+            raise AlreadyInvitedError
+    if not _has_free_slot(team, role):
+        raise RosterFullError
+
+    invite = TeamInvite(
+        team=team,
+        invitee=invitee,
+        role=role,
+        created_by=by,
+        token=secrets.token_urlsafe(32),
+        expires_at=timezone.now() + timedelta(days=settings.TEAM_INVITE_TTL_DAYS),
+    )
+    with transaction.atomic():
+        # An expired pending invite would block the partial unique index; close it first.
+        if invitee is not None:
+            TeamInvite.objects.filter(
+                team=team, invitee=invitee, status=InviteStatus.PENDING
+            ).update(status=InviteStatus.REVOKED, responded_at=timezone.now())
+        invite.save()
+    # TODO(Sprint 7): notify the invitee (invite_received) after commit.
+    return invite
+
+
+def invite_accept(*, user: User, invite: TeamInvite) -> TeamMembership:
+    """Join the team; personal invites are closed, link invites stay usable."""
+    if invite.invitee_id is not None and invite.invitee_id != user.pk:
+        raise NotInviteeError
+    with transaction.atomic():
+        # Serializes acceptances per team so capacity checks cannot race.
+        team = Team.objects.select_for_update().select_related("game").get(pk=invite.team_id)
+        invite = TeamInvite.objects.select_for_update().get(pk=invite.pk)
+        _ensure_pending(invite)
+        if is_team_member(team, user):
+            raise AlreadyMemberError
+        if has_active_team(user, team.game):
+            raise AlreadyInTeamError
+        if not _has_free_slot(team, invite.role):
+            raise RosterFullError
+        membership = TeamMembership.objects.create(
+            team=team, user=user, game=team.game, role=invite.role
+        )
+        if not invite.is_link:
+            invite.status, invite.responded_at = InviteStatus.ACCEPTED, timezone.now()
+            invite.save(update_fields=["status", "responded_at"])
+    return membership
+
+
+def invite_decline(*, user: User, invite: TeamInvite) -> None:
+    if invite.invitee_id != user.pk:
+        raise NotInviteeError
+    _ensure_pending(invite)
+    invite.status, invite.responded_at = InviteStatus.DECLINED, timezone.now()
+    invite.save(update_fields=["status", "responded_at"])
+
+
+def invite_revoke(*, by: User, invite: TeamInvite) -> None:
+    _ensure_captain(invite.team, by)
+    if invite.status != InviteStatus.PENDING:
+        raise InviteNotActiveError
+    invite.status, invite.responded_at = InviteStatus.REVOKED, timezone.now()
+    invite.save(update_fields=["status", "responded_at"])
