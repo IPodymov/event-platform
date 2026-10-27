@@ -1,17 +1,36 @@
 from django.urls import reverse
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from apps.games.models import Game
-from apps.teams.models import INVITE_ROLES, Team, TeamInvite, TeamMembership, TeamRole
+from apps.teams.models import (
+    INVITE_ROLES,
+    RosterAccountStatus,
+    Team,
+    TeamInvite,
+    TeamMembership,
+    TeamRole,
+)
+from apps.teams.selectors import get_account_status, roster_account_issues
 
 
 class TeamMemberSerializer(serializers.ModelSerializer[TeamMembership]):
     nickname = serializers.CharField(source="user.profile.nickname", read_only=True)
+    game_account_status = serializers.SerializerMethodField(
+        help_text="Game account for the team's discipline; required to enter tournaments."
+    )
 
     class Meta:
         model = TeamMembership
-        fields = ("id", "nickname", "role", "joined_at")
+        fields = ("id", "nickname", "role", "joined_at", "game_account_status")
         read_only_fields = fields
+
+    @extend_schema_field(serializers.ChoiceField(choices=RosterAccountStatus.choices))
+    def get_game_account_status(self, membership: TeamMembership) -> str:
+        # Rosters from selectors come annotated; single memberships are looked up.
+        status = getattr(membership, "account_status", None)
+        return status or get_account_status(membership.user, membership.game)
 
 
 class TeamSerializer(serializers.ModelSerializer[Team]):
@@ -40,10 +59,17 @@ class TeamSerializer(serializers.ModelSerializer[Team]):
 
 class TeamDetailSerializer(TeamSerializer):
     roster = TeamMemberSerializer(many=True, read_only=True)
+    all_accounts_linked = serializers.SerializerMethodField(
+        help_text="Every member has a game account for the discipline (verified or not)."
+    )
 
     class Meta(TeamSerializer.Meta):
-        fields = (*TeamSerializer.Meta.fields, "roster")
+        fields = (*TeamSerializer.Meta.fields, "roster", "all_accounts_linked")
         read_only_fields = fields
+
+    @extend_schema_field(OpenApiTypes.BOOL)
+    def get_all_accounts_linked(self, team: Team) -> bool:
+        return roster_account_issues(team.roster).all_linked  # type: ignore[attr-defined]
 
 
 class TeamInviteCreateSerializer(serializers.Serializer[TeamInvite]):

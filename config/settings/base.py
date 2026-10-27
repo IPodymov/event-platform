@@ -229,5 +229,6 @@ SPECTACULAR_SETTINGS = {
         "RegionEnum": "apps.games.regions.Region",
         "TeamRoleEnum": "apps.teams.models.TeamRole",
         "InviteRoleEnum": "apps.teams.models.INVITE_ROLES",
+        "RosterAccountStatusEnum": "apps.teams.models.RosterAccountStatus",
     },
 }

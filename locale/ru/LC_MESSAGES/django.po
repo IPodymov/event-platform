@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tournament-platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 06:55+0000\n"
+"POT-Creation-Date: 2026-10-27 08:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,31 +16,40 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
+#: apps/accounts/admin.py:40
 msgid "Personal info"
 msgstr "Персональная информация"
 
+#: apps/accounts/admin.py:42
 msgid "Permissions"
 msgstr "Права доступа"
 
+#: apps/accounts/admin.py:45
 msgid "Important dates"
 msgstr "Важные даты"
 
+#: apps/accounts/admin.py:87
 msgid "Verify selected game accounts"
 msgstr "Подтвердить выбранные игровые аккаунты"
 
+#: apps/accounts/admin.py:91
 msgid "Remove verification"
 msgstr "Снять подтверждение"
 
+#: apps/accounts/admin.py:103
 #, python-format
 msgid "Updated: %(count)d"
 msgstr "Обновлено: %(count)d"
 
+#: apps/accounts/exceptions.py:10
 msgid "Account operation failed."
 msgstr "Не удалось выполнить операцию с аккаунтом."
 
+#: apps/accounts/exceptions.py:14
 msgid "Another account of this provider is already linked. Unlink it first."
 msgstr "У вас уже привязан другой аккаунт этого сервиса. Сначала отвяжите его."
 
+#: apps/accounts/exceptions.py:19
 msgid ""
 "This account is not linked to any profile. Sign in with email and link it in "
 "your account settings."
@@ -48,96 +57,130 @@ msgstr ""
 "Этот аккаунт не привязан ни к одному профилю. Войдите по email и привяжите "
 "его в настройках аккаунта."
 
+#: apps/accounts/exceptions.py:25 apps/accounts/models.py:95
 msgid "This nickname is already taken."
 msgstr "Этот ник уже занят."
 
+#: apps/accounts/exceptions.py:30 apps/teams/exceptions.py:34
 msgid "Upload a JPEG, PNG or WebP image."
 msgstr "Загрузите изображение в формате JPEG, PNG или WebP."
 
+#: apps/accounts/exceptions.py:35 apps/teams/exceptions.py:39
 msgid "The image is too large."
 msgstr "Изображение слишком большое."
 
+#: apps/accounts/exceptions.py:39 apps/accounts/models.py:136
 msgid "This account is already linked to another player."
 msgstr "Этот аккаунт уже привязан к другому игроку."
 
+#: apps/accounts/exceptions.py:44 apps/accounts/models.py:141
 msgid "You already have an account for this game."
 msgstr "У вас уже есть аккаунт в этой игре."
 
+#: apps/accounts/exceptions.py:49
 msgid "Accounts for Steam games come from your linked Steam account."
 msgstr "Аккаунты для игр Steam берутся из привязанного аккаунта Steam."
 
+#: apps/accounts/exceptions.py:62
 msgid "Choose a region of this game."
 msgstr "Выберите регион этой игры."
 
+#: apps/accounts/exceptions.py:67
 msgid "Only staff can verify game accounts."
 msgstr "Подтверждать игровые аккаунты могут только сотрудники."
 
+#: apps/accounts/forms.py:17
 msgid "Nickname"
 msgstr "Ник"
 
+#: apps/accounts/forms.py:47 apps/teams/forms.py:10
+#: templates/accounts/game_accounts.html:22
 msgid "Game"
 msgstr "Игра"
 
+#: apps/accounts/forms.py:51
 msgid "Riot ID or BattleTag"
 msgstr "Riot ID или BattleTag"
 
+#: apps/accounts/forms.py:53
 msgid "Region"
 msgstr "Регион"
 
+#: apps/accounts/models.py:54
 msgid "email address"
 msgstr "адрес электронной почты"
 
+#: apps/accounts/models.py:62 apps/accounts/models.py:74
+#: apps/accounts/models.py:107 apps/teams/models.py:86
 msgid "user"
 msgstr "пользователь"
 
+#: apps/accounts/models.py:63
 msgid "users"
 msgstr "пользователи"
 
+#: apps/accounts/models.py:77
 msgid "nickname"
 msgstr "ник"
 
+#: apps/accounts/models.py:79
 msgid "avatar"
 msgstr "аватар"
 
+#: apps/accounts/models.py:80
 msgid "country"
 msgstr "страна"
 
+#: apps/accounts/models.py:82
 msgid "time zone"
 msgstr "часовой пояс"
 
+#: apps/accounts/models.py:84
 msgid "about"
 msgstr "о себе"
 
+#: apps/accounts/models.py:89
 msgid "profile"
 msgstr "профиль"
 
+#: apps/accounts/models.py:90
 msgid "profiles"
 msgstr "профили"
 
+#: apps/accounts/models.py:110 apps/games/models.py:51 apps/games/models.py:99
+#: apps/teams/models.py:22 apps/teams/models.py:90
 msgid "game"
 msgstr "дисциплина"
 
+#: apps/accounts/models.py:112
 msgid "account id"
 msgstr "идентификатор аккаунта"
 
+#: apps/accounts/models.py:113
 msgid "region"
 msgstr "регион"
 
+#: apps/accounts/models.py:114 templates/components/verification_badge.html:1
 msgid "verified"
 msgstr "подтверждён"
 
+#: apps/accounts/models.py:121
 msgid "verified by"
 msgstr "кем подтверждён"
 
+#: apps/accounts/models.py:123
 msgid "verified at"
 msgstr "когда подтверждён"
 
+#: apps/accounts/models.py:128
 msgid "game account"
 msgstr "игровой аккаунт"
 
+#: apps/accounts/models.py:129
 msgid "game accounts"
 msgstr "игровые аккаунты"
 
+#: apps/accounts/validators.py:13
 msgid ""
 "Nickname must be 3 to 20 characters long and contain only Latin letters, "
 "digits, underscores and hyphens."
@@ -145,300 +188,422 @@ msgstr ""
 "Ник должен быть длиной от 3 до 20 символов и содержать только латинские "
 "буквы, цифры, подчёркивания и дефисы."
 
+#: apps/accounts/validators.py:22
 msgid "Unknown time zone."
 msgstr "Неизвестный часовой пояс."
 
+#: apps/accounts/validators.py:28
 msgid "Enter a Riot ID in the form Name#TAG."
 msgstr "Введите Riot ID в формате Имя#ТЕГ."
 
+#: apps/accounts/validators.py:35
 msgid "Enter a BattleTag in the form Name#1234."
 msgstr "Введите BattleTag в формате Имя#1234."
 
+#: apps/accounts/validators.py:41
 msgid "Enter a valid SteamID64."
 msgstr "Введите корректный SteamID64."
 
+#: apps/accounts/views.py:37
 msgid "Profile saved."
 msgstr "Профиль сохранён."
 
+#: apps/accounts/views.py:58
 msgid "Game account added. It will be verified by a moderator."
 msgstr "Игровой аккаунт добавлен. Его проверит модератор."
 
+#: apps/games/admin.py:31
 msgid "Exactly 7 maps, separated by commas."
 msgstr "Ровно 7 карт через запятую."
 
+#: apps/games/admin.py:51
 msgid "Make the selected pool active"
 msgstr "Сделать выбранный пул активным"
 
+#: apps/games/admin.py:54
 msgid "Select exactly one pool."
 msgstr "Выберите ровно один пул."
 
+#: apps/games/admin.py:61
 msgid "The pool is now active."
 msgstr "Пул стал активным."
 
+#: apps/games/exceptions.py:10
 msgid "Game operation failed."
 msgstr "Не удалось выполнить операцию с дисциплиной."
 
+#: apps/games/exceptions.py:14
 msgid "This discipline has no map veto."
 msgstr "В этой дисциплине нет выбора карт."
 
+#: apps/games/exceptions.py:19
 msgid "A map pool needs exactly 7 different maps."
 msgstr "В пуле должно быть ровно 7 разных карт."
 
+#: apps/games/models.py:15
 msgid "Solo"
 msgstr "Соло"
 
+#: apps/games/models.py:16
 msgid "Team"
 msgstr "Команда"
 
+#: apps/games/models.py:26
 msgid "Manual confirmation"
 msgstr "Ручное подтверждение"
 
+#: apps/games/models.py:27
 msgid "OpenDota"
 msgstr "OpenDota"
 
+#: apps/games/models.py:31 apps/games/models.py:101 apps/teams/models.py:18
 msgid "name"
 msgstr "название"
 
+#: apps/games/models.py:32
 msgid "slug"
 msgstr "код"
 
+#: apps/games/models.py:34
 msgid "participant type"
 msgstr "тип участия"
 
+#: apps/games/models.py:36
 msgid "roster size"
 msgstr "размер основного состава"
 
+#: apps/games/models.py:37
 msgid "max substitutes"
 msgstr "максимум запасных"
 
+#: apps/games/models.py:40
 msgid "allowed series"
 msgstr "допустимые серии"
 
+#: apps/games/models.py:43
 msgid "result verification"
 msgstr "проверка результата"
 
+#: apps/games/models.py:48 apps/games/models.py:108
 msgid "active"
 msgstr "активна"
 
+#: apps/games/models.py:52
 msgid "games"
 msgstr "дисциплины"
 
+#: apps/games/models.py:106
 msgid "maps"
 msgstr "карты"
 
+#: apps/games/models.py:113
 msgid "map pool"
 msgstr "пул карт"
 
+#: apps/games/models.py:114
 msgid "map pools"
 msgstr "пулы карт"
 
+#: apps/games/regions.py:11 apps/games/regions.py:19
 msgid "Europe"
 msgstr "Европа"
 
+#: apps/games/regions.py:12
 msgid "CIS"
 msgstr "СНГ"
 
+#: apps/games/regions.py:13
 msgid "North America"
 msgstr "Северная Америка"
 
+#: apps/games/regions.py:14
 msgid "South America"
 msgstr "Южная Америка"
 
+#: apps/games/regions.py:15
 msgid "Asia"
 msgstr "Азия"
 
+#: apps/games/regions.py:16
 msgid "Oceania"
 msgstr "Океания"
 
+#: apps/games/regions.py:18
 msgid "Americas"
 msgstr "Америка"
 
+#: apps/games/regions.py:20
 msgid "Asia-Pacific"
 msgstr "Азиатско-Тихоокеанский регион"
 
+#: apps/teams/exceptions.py:10
 msgid "Team operation failed."
 msgstr "Не удалось выполнить операцию с командой."
 
+#: apps/teams/exceptions.py:14
 msgid "Teams can only be created in team disciplines."
 msgstr "Команды можно создавать только в командных дисциплинах."
 
+#: apps/teams/exceptions.py:19
 msgid "You are already in a team of this game."
 msgstr "Вы уже состоите в команде этой дисциплины."
 
+#: apps/teams/exceptions.py:24 apps/teams/models.py:44
 msgid "A team with this name already exists."
 msgstr "Команда с таким названием уже существует."
 
+#: apps/teams/exceptions.py:29 apps/teams/models.py:50
 msgid "A team with this tag already exists."
 msgstr "Команда с таким тегом уже существует."
 
+#: apps/teams/exceptions.py:43
 msgid "Only the team captain can do this."
 msgstr "Это может сделать только капитан команды."
 
+#: apps/teams/exceptions.py:47
 msgid "This invitation is addressed to another player."
 msgstr "Это приглашение адресовано другому игроку."
 
+#: apps/teams/exceptions.py:51
 msgid "No player with this nickname."
 msgstr "Игрока с таким ником нет."
 
+#: apps/teams/exceptions.py:56
 msgid "This player already has a pending invitation to the team."
 msgstr "У этого игрока уже есть действующее приглашение в команду."
 
+#: apps/teams/exceptions.py:61
 msgid "This player is already in the team."
 msgstr "Этот игрок уже в команде."
 
+#: apps/teams/exceptions.py:66
 msgid "This invitation is no longer valid."
 msgstr "Это приглашение больше не действует."
 
+#: apps/teams/exceptions.py:70
 msgid "The team has no free slot for this role."
 msgstr "В команде нет свободного места для этой роли."
 
+#: apps/teams/exceptions.py:75
 msgid "This team has been disbanded."
 msgstr "Эта команда распущена."
 
+#: apps/teams/exceptions.py:79
 msgid "This player is not in the team."
 msgstr "Этого игрока нет в команде."
 
+#: apps/teams/exceptions.py:83
 msgid "Transfer the captaincy to another member before leaving."
 msgstr "Перед уходом передайте капитанство другому участнику."
 
+#: apps/teams/exceptions.py:87
 msgid "The captain cannot be removed; transfer the captaincy first."
 msgstr "Капитана нельзя исключить — сначала передайте капитанство."
 
+#: apps/teams/exceptions.py:92
 msgid "Choose player or substitute."
 msgstr "Выберите: игрок или запасной."
 
+#: apps/teams/forms.py:14
 msgid "Name"
 msgstr "Название"
 
+#: apps/teams/forms.py:15
 msgid "Tag"
 msgstr "Тег"
 
+#: apps/teams/forms.py:17
 msgid "Logo"
 msgstr "Логотип"
 
+#: apps/teams/forms.py:25
 msgid "Player nickname"
 msgstr "Ник игрока"
 
+#: apps/teams/forms.py:27
 msgid "Leave empty to create a shareable link."
 msgstr "Оставьте пустым, чтобы создать ссылку-приглашение."
 
+#: apps/teams/forms.py:30 templates/teams/team_detail.html:48
 msgid "Role"
 msgstr "Роль"
 
+#: apps/teams/models.py:12
 msgid "Tag must be 2 to 5 Latin letters or digits."
 msgstr "Тег должен состоять из 2–5 латинских букв или цифр."
 
+#: apps/teams/models.py:19
 msgid "tag"
 msgstr "тег"
 
+#: apps/teams/models.py:20
 msgid "logo"
 msgstr "логотип"
 
+#: apps/teams/models.py:28
 msgid "captain"
 msgstr "капитан"
 
+#: apps/teams/models.py:33
 msgid "disbanded at"
 msgstr "распущена"
 
+#: apps/teams/models.py:36 apps/teams/models.py:80 apps/teams/models.py:140
 msgid "team"
 msgstr "команда"
 
+#: apps/teams/models.py:37
 msgid "teams"
 msgstr "команды"
 
+#: apps/teams/models.py:63 templates/teams/team_detail.html:44
 msgid "Captain"
 msgstr "Капитан"
 
+#: apps/teams/models.py:64
 msgid "Player"
 msgstr "Игрок"
 
+#: apps/teams/models.py:65
 msgid "Substitute"
 msgstr "Запасной"
 
+#: apps/teams/models.py:71 templates/teams/team_detail.html:43
+msgid "No game account"
+msgstr "Нет игрового аккаунта"
+
+#: apps/teams/models.py:72 templates/teams/team_detail.html:43
+msgid "Account not verified"
+msgstr "Аккаунт не подтверждён"
+
+#: apps/teams/models.py:73
+msgid "Account verified"
+msgstr "Аккаунт подтверждён"
+
+#: apps/teams/models.py:92 apps/teams/models.py:152
 msgid "role"
 msgstr "роль"
 
+#: apps/teams/models.py:93
 msgid "joined at"
 msgstr "вступил"
 
+#: apps/teams/models.py:94
 msgid "left at"
 msgstr "покинул"
 
+#: apps/teams/models.py:97
 msgid "team membership"
 msgstr "участие в команде"
 
+#: apps/teams/models.py:98
 msgid "team memberships"
 msgstr "участие в командах"
 
+#: apps/teams/models.py:105
 msgid "The player is already in a team of this game."
 msgstr "Игрок уже состоит в команде этой дисциплины."
 
+#: apps/teams/models.py:130
 msgid "Pending"
 msgstr "Ожидает ответа"
 
+#: apps/teams/models.py:131
 msgid "Accepted"
 msgstr "Принято"
 
+#: apps/teams/models.py:132
 msgid "Declined"
 msgstr "Отклонено"
 
+#: apps/teams/models.py:133
 msgid "Revoked"
 msgstr "Отозвано"
 
+#: apps/teams/models.py:148
 msgid "invitee"
 msgstr "приглашённый"
 
+#: apps/teams/models.py:150
 msgid "token"
 msgstr "токен"
 
+#: apps/teams/models.py:158
 msgid "status"
 msgstr "статус"
 
+#: apps/teams/models.py:164
 msgid "created by"
 msgstr "кем создано"
 
+#: apps/teams/models.py:167
 msgid "expires at"
 msgstr "действует до"
 
+#: apps/teams/models.py:168
 msgid "responded at"
 msgstr "дата ответа"
 
+#: apps/teams/models.py:171
 msgid "team invite"
 msgstr "приглашение в команду"
 
+#: apps/teams/models.py:172
 msgid "team invites"
 msgstr "приглашения в команды"
 
+#: apps/teams/views.py:35
+#, python-format
+msgid ""
+"Link your %(game)s account in the profile settings: without it the team "
+"cannot register for tournaments."
+msgstr "Привяжите аккаунт %(game)s в настройках профиля: без него команду не получится зарегистрировать на турнир."
+
+#: apps/teams/views.py:52
 msgid "Team created."
 msgstr "Команда создана."
 
+#: apps/teams/views.py:88
 msgid "Invitation created."
 msgstr "Приглашение создано."
 
+#: apps/teams/views.py:115
 msgid "Invitation declined."
 msgstr "Приглашение отклонено."
 
+#: apps/teams/views.py:121
 msgid "You joined the team."
 msgstr "Вы вступили в команду."
 
+#: apps/teams/views.py:168
 msgid "You left the team."
 msgstr "Вы покинули команду."
 
+#: config/exceptions.py:16
 msgid "Operation failed."
 msgstr "Не удалось выполнить операцию."
 
+#: config/exceptions.py:26
 msgid "You do not have permission to perform this action."
 msgstr "У вас нет прав на это действие."
 
+#: config/settings/base.py:156
 msgid "Russian"
 msgstr "Русский"
 
+#: config/settings/base.py:157
 msgid "English"
 msgstr "Английский"
 
+#: templates/accounts/game_accounts.html:3
+#: templates/accounts/game_accounts.html:7
+#: templates/accounts/profile_edit.html:34
+#: templates/accounts/public_profile.html:18
+#: templates/components/header.html:14
 msgid "Game accounts"
 msgstr "Игровые аккаунты"
 
+#: templates/accounts/game_accounts.html:10
 #, python-format
 msgid ""
 "CS2 and Dota 2 accounts are added automatically when you <a "
@@ -447,152 +612,237 @@ msgstr ""
 "Аккаунты CS2 и Dota 2 добавляются автоматически, когда вы <a "
 "href=\"%(connections_url)s\">привязываете Steam</a>."
 
+#: templates/accounts/game_accounts.html:23
 msgid "Account id"
 msgstr "Идентификатор"
 
+#: templates/accounts/game_accounts.html:24
 msgid "Status"
 msgstr "Статус"
 
+#: templates/accounts/game_accounts.html:25
 msgid "Actions"
 msgstr "Действия"
 
+#: templates/accounts/game_accounts.html:41 templates/teams/team_detail.html:56
 msgid "Remove"
 msgstr "Удалить"
 
+#: templates/accounts/game_accounts.html:51
+#: templates/accounts/public_profile.html:37
 msgid "No game accounts yet."
 msgstr "Игровых аккаунтов пока нет."
 
+#: templates/accounts/game_accounts.html:57
 msgid "Add Riot ID or BattleTag"
 msgstr "Добавить Riot ID или BattleTag"
 
+#: templates/accounts/game_accounts.html:63
 msgid "Add"
 msgstr "Добавить"
 
+#: templates/accounts/profile_edit.html:3
+#: templates/accounts/profile_edit.html:7 templates/components/header.html:15
 msgid "Profile"
 msgstr "Профиль"
 
+#: templates/accounts/profile_edit.html:8
 msgid "How other players see you."
 msgstr "Так вас видят другие игроки."
 
+#: templates/accounts/profile_edit.html:10
 msgid "Public page"
 msgstr "Публичная страница"
 
+#: templates/accounts/profile_edit.html:19
 msgid "Save"
 msgstr "Сохранить"
 
+#: templates/accounts/profile_edit.html:35
 msgid "Steam and Discord"
 msgstr "Steam и Discord"
 
+#: templates/accounts/profile_edit.html:36
 msgid "Change Password"
 msgstr "Сменить пароль"
 
+#: templates/accounts/public_profile.html:11
 #, python-format
 msgid "Joined %(date)s"
 msgstr "На платформе с %(date)s"
 
+#: templates/base.html:7 templates/base.html:21
+#: templates/components/header.html:5 templates/home.html:9
+#: tests/test_settings.py:32
 msgid "Tournaments"
 msgstr "Турниры"
 
+#: templates/components/header.html:6
 msgid "Main"
 msgstr "Основная навигация"
 
+#: templates/components/header.html:8 templates/teams/team_create.html:3
+#: templates/teams/team_create.html:8
 msgid "New team"
 msgstr "Новая команда"
 
+#: templates/components/header.html:11
 msgid "Account"
 msgstr "Аккаунт"
 
+#: templates/components/header.html:13 templates/teams/team_detail.html:66
 msgid "Invitations"
 msgstr "Приглашения"
 
+#: templates/components/header.html:16
 msgid "Sign Out"
 msgstr "Выйти"
 
+#: templates/components/header.html:18 templates/home.html:18
 msgid "Sign In"
 msgstr "Войти"
 
+#: templates/components/header.html:19 templates/home.html:17
 msgid "Sign Up"
 msgstr "Регистрация"
 
+#: templates/components/verification_badge.html:1
 msgid "awaiting verification"
 msgstr "ожидает проверки"
 
+#: templates/home.html:3
 msgid "Home"
 msgstr "Главная"
 
+#: templates/home.html:8
 msgid "Esports tournaments"
 msgstr "Киберспортивные турниры"
 
+#: templates/home.html:10
 msgid "Build a team, sign up for tournaments and play matches in brackets."
 msgstr "Соберите команду, регистрируйтесь на турниры и играйте матчи по сетке."
 
+#: templates/home.html:14
 msgid "Create a team"
 msgstr "Создать команду"
 
+#: templates/home.html:15
 msgid "My profile"
 msgstr "Мой профиль"
 
+#: templates/home.html:23
 msgid "Disciplines"
 msgstr "Дисциплины"
 
+#: templates/home.html:31
 #, python-format
 msgid "Team %(size)s+%(subs)s"
 msgstr "Команда %(size)s+%(subs)s"
 
+#: templates/home.html:33
 msgid "Solo 1v1"
 msgstr "Соло 1v1"
 
+#: templates/teams/invite_detail.html:3 templates/teams/invite_detail.html:11
 msgid "Team invitation"
 msgstr "Приглашение в команду"
 
+#: templates/teams/invite_detail.html:20
+#, python-format
+msgid ""
+"You have no %(game)s account linked. You can join, but the team cannot "
+"register for tournaments until you link one."
+msgstr "У вас не привязан аккаунт %(game)s. Вступить в команду можно, но зарегистрировать её на турнир не получится, пока вы его не привяжете."
+
+#: templates/teams/invite_detail.html:20 templates/teams/team_detail.html:19
+msgid "Link an account"
+msgstr "Привязать аккаунт"
+
+#: templates/teams/invite_detail.html:24
 msgid "Accept"
 msgstr "Принять"
 
+#: templates/teams/invite_detail.html:26
 msgid "Decline"
 msgstr "Отклонить"
 
+#: templates/teams/my_invites.html:3 templates/teams/my_invites.html:6
 msgid "My invitations"
 msgstr "Мои приглашения"
 
+#: templates/teams/my_invites.html:18
 msgid "Open"
 msgstr "Открыть"
 
+#: templates/teams/my_invites.html:23
 msgid "No invitations."
 msgstr "Приглашений нет."
 
+#: templates/teams/my_invites.html:24
 msgid "Team captains can invite you by your nickname."
 msgstr "Капитаны команд могут пригласить вас по нику."
 
+#: templates/teams/team_create.html:9
 msgid "You will become the captain and can invite players."
 msgstr "Вы станете капитаном и сможете приглашать игроков."
 
+#: templates/teams/team_create.html:18
 msgid "Create"
 msgstr "Создать"
 
+#: templates/teams/team_detail.html:14
 msgid "The team has been disbanded."
 msgstr "Команда распущена."
 
+#: templates/teams/team_detail.html:19
+#, python-format
+msgid ""
+"You have no %(game)s account linked. Without it the team cannot register for "
+"tournaments."
+msgstr "У вас не привязан аккаунт %(game)s. Без него команду не получится зарегистрировать на турнир."
+
+#: templates/teams/team_detail.html:21
+#, python-format
+msgid ""
+"%(counter)s member has no %(game)s account. The team cannot register for "
+"tournaments until every member links one."
+msgid_plural ""
+"%(counter)s members have no %(game)s account. The team cannot register for "
+"tournaments until every member links one."
+msgstr[0] "У %(counter)s участника нет аккаунта %(game)s. Команду не получится зарегистрировать на турнир, пока аккаунт не привяжут все."
+msgstr[1] "У %(counter)s участников нет аккаунта %(game)s. Команду не получится зарегистрировать на турнир, пока аккаунт не привяжут все."
+msgstr[2] "У %(counter)s участников нет аккаунта %(game)s. Команду не получится зарегистрировать на турнир, пока аккаунт не привяжут все."
+msgstr[3] "У %(counter)s участника нет аккаунта %(game)s. Команду не получится зарегистрировать на турнир, пока аккаунт не привяжут все."
+
+#: templates/teams/team_detail.html:26
 msgid "Roster"
 msgstr "Состав"
 
+#: templates/teams/team_detail.html:30
 msgid "Leave team"
 msgstr "Покинуть команду"
 
+#: templates/teams/team_detail.html:54
 msgid "Change role"
 msgstr "Сменить роль"
 
+#: templates/teams/team_detail.html:55
 msgid "Make captain"
 msgstr "Сделать капитаном"
 
+#: templates/teams/team_detail.html:76
 msgid "Link"
 msgstr "Ссылка"
 
+#: templates/teams/team_detail.html:79
 msgid "until"
 msgstr "до"
 
+#: templates/teams/team_detail.html:83
 msgid "Revoke"
 msgstr "Отозвать"
 
+#: templates/teams/team_detail.html:94
 msgid "Invite"
 msgstr "Пригласить"
 

@@ -10,18 +10,33 @@ from django.views.decorators.http import require_POST
 from django.views.generic import FormView
 
 from apps.accounts.models import User
+from apps.games.models import Game
 from apps.teams import services
 from apps.teams.exceptions import TeamsError
 from apps.teams.forms import TeamCreateForm, TeamInviteForm
-from apps.teams.models import INVITE_ROLES, Team, TeamInvite
+from apps.teams.models import INVITE_ROLES, RosterAccountStatus, Team, TeamInvite, TeamMembership
 from apps.teams.selectors import (
+    get_account_status,
     get_invite_by_token,
     get_team_with_roster,
-    is_team_member,
     list_team_invites,
     list_user_invites,
+    roster_account_issues,
 )
 from config.exceptions import DomainError
+
+
+def _warn_if_no_game_account(request: HttpRequest, game: Game) -> None:
+    """Soft roster check: joining is allowed, tournament registration will require the account."""
+    if get_account_status(cast(User, request.user), game) == RosterAccountStatus.MISSING:
+        messages.warning(
+            request,
+            _(
+                "Link your %(game)s account in the profile settings: "
+                "without it the team cannot register for tournaments."
+            )
+            % {"game": game.name},
+        )
 
 
 class TeamCreateView(LoginRequiredMixin, FormView[TeamCreateForm]):
@@ -35,6 +50,7 @@ class TeamCreateView(LoginRequiredMixin, FormView[TeamCreateForm]):
             form.add_error(error.field, str(error))
             return self.form_invalid(form)
         messages.success(self.request, _("Team created."))
+        _warn_if_no_game_account(self.request, team.game)
         return redirect("teams:detail", pk=team.pk)
 
 
@@ -42,9 +58,13 @@ def team_detail(request: HttpRequest, pk: int) -> HttpResponse:
     team = get_team_with_roster(pk)
     if team is None:
         raise Http404
+    roster: list[TeamMembership] = team.roster  # type: ignore[attr-defined]
+    viewer = next((m for m in roster if m.user_id == request.user.pk), None)
     context: dict[str, Any] = {
         "team": team,
-        "is_member": request.user.is_authenticated and is_team_member(team, request.user),
+        "is_member": viewer is not None,
+        "viewer_membership": viewer,
+        "account_issues": roster_account_issues(roster),
         "invite_roles": INVITE_ROLES,
     }
     if (
@@ -99,8 +119,14 @@ def invite_detail(request: HttpRequest, token: str) -> HttpResponse:
             messages.error(request, str(error))
             return redirect("teams:invite", token=token)
         messages.success(request, _("You joined the team."))
+        _warn_if_no_game_account(request, invite.team.game)
         return redirect("teams:detail", pk=invite.team_id)
-    return render(request, "teams/invite_detail.html", {"invite": invite})
+    account_status = get_account_status(cast(User, request.user), invite.team.game)
+    return render(
+        request,
+        "teams/invite_detail.html",
+        {"invite": invite, "has_game_account": account_status != RosterAccountStatus.MISSING},
+    )
 
 
 @login_required

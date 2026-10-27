@@ -295,6 +295,16 @@ def test_middleware_activates_profile_timezone(client: Client) -> None:
     assert str(timezone.get_current_timezone()) == "Asia/Vladivostok"
 
 
+def test_api_answers_in_utc(api_client: APIClient) -> None:
+    user = UserFactory.create(profile__timezone="Asia/Vladivostok")
+    api_client.force_login(user)
+
+    response = api_client.get("/api/v1/me/profile/")
+
+    assert response.status_code == 200
+    assert str(timezone.get_current_timezone()) == "UTC"
+
+
 def test_middleware_uses_utc_for_anonymous(client: Client) -> None:
     client.get(reverse("home"))
 

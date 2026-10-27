@@ -15,6 +15,11 @@
         </div>
     </div>
 </header>
+{% if viewer_membership.account_status == "missing" %}
+<div class="alert alert--warning roster-issues" role="status">{% blocktranslate with game=team.game.name %}You have no {{ game }} account linked. Without it the team cannot register for tournaments.{% endblocktranslate %} <a href="{% url 'accounts:game_accounts' %}">{% translate "Link an account" %}</a></div>
+{% elif invite_form and account_issues.missing %}
+<div class="alert alert--warning roster-issues" role="status">{% blocktranslate count counter=account_issues.missing with game=team.game.name %}{{ counter }} member has no {{ game }} account. The team cannot register for tournaments until every member links one.{% plural %}{{ counter }} members have no {{ game }} account. The team cannot register for tournaments until every member links one.{% endblocktranslate %}</div>
+{% endif %}
 <div class="layout-sidebar">
     <section class="card">
         <div class="card__header">
@@ -35,6 +40,7 @@
                     <a class="list__title" href="{% url 'accounts:public_profile' nickname %}">{{ nickname }}</a>
                     {% if member.role != "captain" %}<span class="list__meta">{{ member.get_role_display }}</span>{% endif %}
                 </div>
+                {% if member.account_status == "missing" %}<span class="badge badge--danger badge--dot roster-account-missing">{% translate "No game account" %}</span>{% elif member.account_status == "unverified" %}<span class="badge badge--warning badge--dot roster-account-unverified">{% translate "Account not verified" %}</span>{% endif %}
                 {% if member.role == "captain" %}<span class="badge badge--accent">{% translate "Captain" %}</span>{% endif %}
                 {% if invite_form and member.role != "captain" %}
                 <form class="form--inline" method="post" action="{% url 'teams:member_action' team.pk member.pk %}">

@@ -65,6 +65,14 @@ class TeamRole(models.TextChoices):
     SUBSTITUTE = "substitute", _("Substitute")
 
 
+class RosterAccountStatus(models.TextChoices):
+    """Whether a roster member has a game account for the team's discipline."""
+
+    MISSING = "missing", _("No game account")
+    UNVERIFIED = "unverified", _("Account not verified")
+    VERIFIED = "verified", _("Account verified")
+
+
 class TeamMembership(models.Model):
     """A player's stay in a team; ``left_at`` is set when they leave."""
 

@@ -16,6 +16,9 @@
             <span class="badge">{{ invite.team.game.name }}</span>
             <span class="badge badge--accent">{{ invite.get_role_display }}</span>
         </div>
+        {% if not has_game_account %}
+        <div class="alert alert--warning" role="status">{% blocktranslate with game=invite.team.game.name %}You have no {{ game }} account linked. You can join, but the team cannot register for tournaments until you link one.{% endblocktranslate %} <a href="{% url 'accounts:game_accounts' %}">{% translate "Link an account" %}</a></div>
+        {% endif %}
         <form class="btn-group" method="post">
             {% csrf_token %}
             <button class="btn btn--primary" type="submit" name="action" value="accept">{% translate "Accept" %}</button>
