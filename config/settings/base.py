@@ -166,11 +166,12 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "media/"
 MEDIA_ROOT = env.path("DJANGO_MEDIA_ROOT", default=BASE_DIR / "media")
 
-# Avatars are re-encoded to WebP within AVATAR_SIZE x AVATAR_SIZE.
-AVATAR_MAX_BYTES = 5 * 1024 * 1024
-AVATAR_MAX_PIXELS = 25_000_000
+# Uploaded images (config/images.py) are re-encoded to WebP within the given size.
+UPLOAD_IMAGE_MAX_BYTES = 5 * 1024 * 1024
+UPLOAD_IMAGE_MAX_PIXELS = 25_000_000
 AVATAR_SIZE = 512
-# Python 3.12 does not know WebP; needed for correct Content-Type on avatars.
+TEAM_LOGO_SIZE = 256
+# Python 3.12 does not know WebP; needed for correct Content-Type on images.
 mimetypes.add_type("image/webp", ".webp")
 
 _email = env.email_url("EMAIL_URL", default="consolemail://")

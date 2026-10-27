@@ -131,14 +131,14 @@ def test_avatar_rejects_other_formats(upload: SimpleUploadedFile, settings: Sett
 
 
 def test_avatar_rejects_too_many_bytes(settings: Settings) -> None:
-    settings.AVATAR_MAX_BYTES = 100
+    settings.UPLOAD_IMAGE_MAX_BYTES = 100
 
     with pytest.raises(AvatarTooLargeError):
         services.profile_update(profile=ProfileFactory.create(), data={}, avatar=image_upload())
 
 
 def test_avatar_rejects_too_many_pixels_before_decoding(settings: Settings) -> None:
-    settings.AVATAR_MAX_PIXELS = 100
+    settings.UPLOAD_IMAGE_MAX_PIXELS = 100
 
     with pytest.raises(AvatarTooLargeError):
         services.profile_update(profile=ProfileFactory.create(), data={}, avatar=image_upload())
