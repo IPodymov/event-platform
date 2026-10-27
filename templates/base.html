@@ -1,0 +1,26 @@
+{% load i18n static %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block head_title %}{% endblock head_title %} · {% translate "Tournaments" %}</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% block extra_head %}{% endblock extra_head %}
+</head>
+<body>
+<div class="page">
+    {% include "components/header.html" %}
+    <main class="main {% block main_class %}{% endblock main_class %}">
+        <div class="container">
+            {% include "components/messages.html" %}
+            {% block body %}{% block main %}{% block content %}{% endblock content %}{% endblock main %}{% endblock body %}
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="container">{% translate "Tournaments" %} · CS2 · Dota 2 · Wild Rift · Hearthstone</div>
+    </footer>
+</div>
+{% block extra_body %}{% endblock extra_body %}
+</body>
+</html>

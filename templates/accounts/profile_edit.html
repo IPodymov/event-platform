@@ -1,12 +1,41 @@
-{% extends "allauth/layouts/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 {% block head_title %}{% translate "Profile" %}{% endblock head_title %}
 {% block content %}
-<h1>{% translate "Profile" %}</h1>
-{% if object.avatar %}<img src="{{ object.avatar.url }}" alt="" width="128" height="128">{% endif %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">{% translate "Save" %}</button>
-</form>
+<header class="page-header">
+    <div>
+        <h1>{% translate "Profile" %}</h1>
+        <p class="page-header__subtitle">{% translate "How other players see you." %}</p>
+    </div>
+    <a class="btn" href="{% url 'accounts:public_profile' object.nickname %}">{% translate "Public page" %}</a>
+</header>
+<div class="layout-sidebar">
+    <section class="card">
+        <div class="card__body">
+            <form class="form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="form__actions">
+                    <button class="btn btn--primary" type="submit">{% translate "Save" %}</button>
+                </div>
+            </form>
+        </div>
+    </section>
+    <aside class="card">
+        <div class="card__body">
+            <div class="cluster">
+                {% include "components/avatar.html" with image=object.avatar name=object.nickname size="lg" %}
+                <div>
+                    <p class="list__title">{{ object.nickname }}</p>
+                    <p class="text-muted text-sm">{{ user.email }}</p>
+                </div>
+            </div>
+            <div class="btn-group">
+                <a class="btn btn--sm" href="{% url 'accounts:game_accounts' %}">{% translate "Game accounts" %}</a>
+                <a class="btn btn--sm" href="{% url 'socialaccount_connections' %}">{% translate "Steam and Discord" %}</a>
+                <a class="btn btn--sm btn--ghost" href="{% url 'account_change_password' %}">{% translate "Change Password" %}</a>
+            </div>
+        </div>
+    </aside>
+</div>
 {% endblock content %}

@@ -1,11 +1,23 @@
-{% extends "allauth/layouts/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 {% block head_title %}{% translate "New team" %}{% endblock head_title %}
+{% block main_class %}main--narrow{% endblock main_class %}
 {% block content %}
-    <h1>{% translate "New team" %}</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">{% translate "Create" %}</button>
-    </form>
+<header class="page-header">
+    <div>
+        <h1>{% translate "New team" %}</h1>
+        <p class="page-header__subtitle">{% translate "You will become the captain and can invite players." %}</p>
+    </div>
+</header>
+<section class="card">
+    <div class="card__body">
+        <form class="form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="form__actions">
+                <button class="btn btn--primary btn--block" type="submit">{% translate "Create" %}</button>
+            </div>
+        </form>
+    </div>
+</section>
 {% endblock content %}

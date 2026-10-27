@@ -1,0 +1,43 @@
+/* Entity header: avatar/logo + name + meta for a player or a team page. */
+.entity-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    margin-bottom: var(--space-6);
+}
+
+.entity-header__name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2);
+}
+
+.entity-header__tag {
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-medium);
+}
+
+.entity-header__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-4);
+    margin-top: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+}
+
+.entity-header__bio {
+    margin-top: var(--space-3);
+    color: var(--color-text-muted);
+}
+
+@media (max-width: 40rem) {
+    .entity-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

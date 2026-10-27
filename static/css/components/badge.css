@@ -1,0 +1,43 @@
+/* Badge: short status or role label. Modifiers map to semantic colors. */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 0.125rem var(--space-2);
+    border-radius: var(--radius-full);
+    background: var(--color-surface-raised);
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.badge--accent {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+}
+
+.badge--success {
+    background: var(--color-success-soft);
+    color: var(--color-success);
+}
+
+.badge--warning {
+    background: var(--color-warning-soft);
+    color: var(--color-warning);
+}
+
+.badge--danger {
+    background: var(--color-danger-soft);
+    color: var(--color-danger);
+}
+
+/* Leading dot for live/status badges */
+.badge--dot::before {
+    content: "";
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 50%;
+    background: currentColor;
+}

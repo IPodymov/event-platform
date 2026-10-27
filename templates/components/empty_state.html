@@ -1,0 +1,5 @@
+{% comment %}Params: title, text (optional).{% endcomment %}
+<div class="empty-state">
+    <p class="empty-state__title">{{ title }}</p>
+    {% if text %}<p>{{ text }}</p>{% endif %}
+</div>

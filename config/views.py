@@ -1,4 +1,6 @@
 from django.db import connection
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import render
 from drf_spectacular.utils import extend_schema, inline_serializer
 from rest_framework import serializers, status
 from rest_framework.permissions import AllowAny
@@ -27,3 +29,10 @@ class HealthView(APIView):
                 {"status": "db_unavailable"}, status=status.HTTP_503_SERVICE_UNAVAILABLE
             )
         return Response({"status": "ok"})
+
+
+def home(request: HttpRequest) -> HttpResponse:
+    # Imported here: config must not import app models at module load.
+    from apps.games.selectors import list_active_games
+
+    return render(request, "home.html", {"games": list_active_games()})

@@ -1,64 +1,95 @@
-{% extends "allauth/layouts/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 {% block head_title %}{{ team }}{% endblock head_title %}
 {% block content %}
-<h1>[{{ team.tag }}] {{ team.name }}</h1>
-{% if team.logo %}<img src="{{ team.logo.url }}" alt="{{ team.name }}" width="128" height="128">{% endif %}
-<p>{{ team.game.name }}</p>
-{% if team.is_disbanded %}<p>{% translate "The team has been disbanded." %}</p>{% endif %}
-<h2>{% translate "Roster" %}</h2>
-<ul>
-    {% for member in team.roster %}
-    {% with nickname=member.user.profile.nickname %}
-    <li>
-        <a href="{% url 'accounts:public_profile' nickname %}">{{ nickname }}</a>
-        — {{ member.get_role_display }}
-        {% if invite_form and member.role != "captain" %}
-        <form method="post" action="{% url 'teams:member_action' team.pk member.pk %}">
-            {% csrf_token %}
-            <select name="role">
-                {% for value, label in invite_roles %}
-                <option value="{{ value }}" {% if value == member.role %}selected{% endif %}>{{ label }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit" name="action" value="set_role">{% translate "Change role" %}</button>
-            <button type="submit" name="action" value="make_captain">{% translate "Make captain" %}</button>
-            <button type="submit" name="action" value="remove">{% translate "Remove" %}</button>
-        </form>
+<header class="entity-header">
+    {% include "components/avatar.html" with image=team.logo name=team.name size="lg" square=True %}
+    <div>
+        <div class="entity-header__name">
+            <h1>{{ team.name }}</h1>
+            <span class="entity-header__tag">{{ team.tag }}</span>
+        </div>
+        <div class="entity-header__meta">
+            <span class="badge">{{ team.game.name }}</span>
+            {% if team.is_disbanded %}<span class="badge badge--danger">{% translate "The team has been disbanded." %}</span>{% endif %}
+        </div>
+    </div>
+</header>
+<div class="layout-sidebar">
+    <section class="card">
+        <div class="card__header">
+            <h2 class="card__title">{% translate "Roster" %}</h2>
+            {% if is_member %}
+            <form method="post" action="{% url 'teams:leave' team.pk %}">
+                {% csrf_token %}
+                <button class="btn btn--sm btn--ghost" type="submit">{% translate "Leave team" %}</button>
+            </form>
+            {% endif %}
+        </div>
+        <ul class="list">
+            {% for member in team.roster %}
+            {% with nickname=member.user.profile.nickname %}
+            <li class="list__item">
+                {% include "components/avatar.html" with image=member.user.profile.avatar name=nickname %}
+                <div class="list__main">
+                    <a class="list__title" href="{% url 'accounts:public_profile' nickname %}">{{ nickname }}</a>
+                    {% if member.role != "captain" %}<span class="list__meta">{{ member.get_role_display }}</span>{% endif %}
+                </div>
+                {% if member.role == "captain" %}<span class="badge badge--accent">{% translate "Captain" %}</span>{% endif %}
+                {% if invite_form and member.role != "captain" %}
+                <form class="form--inline" method="post" action="{% url 'teams:member_action' team.pk member.pk %}">
+                    {% csrf_token %}
+                    <label class="visually-hidden" for="role-{{ member.pk }}">{% translate "Role" %}</label>
+                    <select id="role-{{ member.pk }}" name="role">
+                        {% for value, label in invite_roles %}
+                        <option value="{{ value }}" {% if value == member.role %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn btn--sm" type="submit" name="action" value="set_role">{% translate "Change role" %}</button>
+                    <button class="btn btn--sm" type="submit" name="action" value="make_captain">{% translate "Make captain" %}</button>
+                    <button class="btn btn--sm btn--danger" type="submit" name="action" value="remove">{% translate "Remove" %}</button>
+                </form>
+                {% endif %}
+            </li>
+            {% endwith %}
+            {% endfor %}
+        </ul>
+    </section>
+    {% if invite_form %}
+    <section class="card">
+        <div class="card__header"><h2 class="card__title">{% translate "Invitations" %}</h2></div>
+        {% if invites %}
+        <ul class="list">
+            {% for invite in invites %}
+            <li class="list__item">
+                <div class="list__main">
+                    {% if invite.invitee %}
+                    <span class="list__title">{{ invite.invitee.profile.nickname }}</span>
+                    {% else %}
+                    {% url 'teams:invite' invite.token as invite_path %}
+                    <label class="list__title" for="invite-link-{{ invite.pk }}">{% translate "Link" %}</label>
+                    <input class="input input--mono" id="invite-link-{{ invite.pk }}" type="text" readonly value="{{ request.scheme }}://{{ request.get_host }}{{ invite_path }}">
+                    {% endif %}
+                    <span class="list__meta">{{ invite.get_role_display }} · {% translate "until" %} <time datetime="{{ invite.expires_at|date:'c' }}">{{ invite.expires_at|date:"SHORT_DATETIME_FORMAT" }}</time></span>
+                </div>
+                <form method="post" action="{% url 'teams:invite_revoke' team.pk invite.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn--sm btn--ghost" type="submit">{% translate "Revoke" %}</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
         {% endif %}
-    </li>
-    {% endwith %}
-    {% endfor %}
-</ul>
-{% if is_member %}
-<form method="post" action="{% url 'teams:leave' team.pk %}">
-    {% csrf_token %}
-    <button type="submit">{% translate "Leave team" %}</button>
-</form>
-{% endif %}
-{% if invite_form %}
-<h2>{% translate "Invitations" %}</h2>
-<ul>
-    {% for invite in invites %}
-    <li>
-        {% if invite.invitee %}
-        {{ invite.invitee.profile.nickname }}
-        {% else %}
-        {% url 'teams:invite' invite.token as invite_path %}
-        {% translate "Link" %}: {{ request.scheme }}://{{ request.get_host }}{{ invite_path }}
-        {% endif %}
-        — {{ invite.get_role_display }}, {% translate "until" %} {{ invite.expires_at|date:"SHORT_DATETIME_FORMAT" }}
-        <form method="post" action="{% url 'teams:invite_revoke' team.pk invite.pk %}">
-            {% csrf_token %}
-            <button type="submit">{% translate "Revoke" %}</button>
-        </form>
-    </li>
-    {% endfor %}
-</ul>
-<form method="post" action="{% url 'teams:invite_create' team.pk %}">
-    {% csrf_token %}
-    {{ invite_form.as_p }}
-    <button type="submit">{% translate "Invite" %}</button>
-</form>
-{% endif %}
+        <div class="card__body">
+            <form class="form" method="post" action="{% url 'teams:invite_create' team.pk %}">
+                {% csrf_token %}
+                {{ invite_form.as_p }}
+                <div class="form__actions">
+                    <button class="btn btn--primary" type="submit">{% translate "Invite" %}</button>
+                </div>
+            </form>
+        </div>
+    </section>
+    {% endif %}
+</div>
 {% endblock content %}

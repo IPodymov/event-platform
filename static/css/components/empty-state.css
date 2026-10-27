@@ -1,0 +1,18 @@
+/* Empty state: shown instead of an empty list or table. */
+.empty-state {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-2);
+    padding: var(--space-7) var(--space-5);
+    color: var(--color-text-muted);
+    text-align: center;
+}
+
+.empty-state__title {
+    color: var(--color-text);
+    font-weight: var(--weight-medium);
+}
+
+.empty-state p {
+    font-size: var(--text-sm);
+}

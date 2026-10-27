@@ -77,6 +77,10 @@ class Game(models.Model):
     def is_team(self) -> bool:
         return self.participant_type == ParticipantType.TEAM
 
+    @property
+    def series_labels(self) -> list[str]:
+        return [SeriesFormat(value).label for value in self.allowed_series]
+
 
 MAP_POOL_SIZE = 7
 MAP_NAME_MAX_LENGTH = 50

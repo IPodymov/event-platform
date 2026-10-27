@@ -1,0 +1,23 @@
+/* Page header: title, optional subtitle and actions on the right. */
+.page-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+.page-header__subtitle {
+    margin-top: var(--space-2);
+    color: var(--color-text-muted);
+}
+
+.page-header__eyebrow {
+    margin-bottom: var(--space-2);
+    color: var(--color-accent);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}

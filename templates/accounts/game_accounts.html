@@ -1,36 +1,69 @@
-{% extends "allauth/layouts/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 {% block head_title %}{% translate "Game accounts" %}{% endblock head_title %}
 {% block content %}
-    <h1>{% translate "Game accounts" %}</h1>
-    <table>
-        {% for account in accounts %}
-            <tr>
-                <td>{{ account.game.name }}</td>
-                <td>{{ account.external_id }}</td>
-                <td>{{ account.get_region_display|default:"" }}</td>
-                <td>{% if account.verified %}{% translate "verified" %}{% else %}{% translate "awaiting verification" %}{% endif %}</td>
-                <td>
-                    {% if account.game.slug != "cs2" and account.game.slug != "dota2" %}
-                        <form method="post" action="{% url 'accounts:game_account_delete' account.pk %}">
-                            {% csrf_token %}
-                            <button type="submit">{% translate "Remove" %}</button>
-                        </form>
-                    {% endif %}
-                </td>
-            </tr>
-        {% empty %}
-            <tr><td>{% translate "No game accounts yet." %}</td></tr>
-        {% endfor %}
-    </table>
-    <p>
-        {% url 'socialaccount_connections' as connections_url %}
-        {% blocktranslate %}CS2 and Dota 2 accounts are added automatically when you <a href="{{ connections_url }}">link Steam</a>.{% endblocktranslate %}
-    </p>
-    <h2>{% translate "Add Riot ID or BattleTag" %}</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">{% translate "Add" %}</button>
-    </form>
+<header class="page-header">
+    <div>
+        <h1>{% translate "Game accounts" %}</h1>
+        <p class="page-header__subtitle">
+            {% url 'socialaccount_connections' as connections_url %}
+            {% blocktranslate %}CS2 and Dota 2 accounts are added automatically when you <a href="{{ connections_url }}">link Steam</a>.{% endblocktranslate %}
+        </p>
+    </div>
+</header>
+<div class="layout-sidebar">
+    <section class="card">
+        <div class="card__body card__body--flush">
+            {% if accounts %}
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>{% translate "Game" %}</th>
+                        <th>{% translate "Account id" %}</th>
+                        <th>{% translate "Status" %}</th>
+                        <th><span class="visually-hidden">{% translate "Actions" %}</span></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for account in accounts %}
+                    <tr>
+                        <td>
+                            {{ account.game.name }}
+                            {% if account.region %}<div class="text-muted text-sm">{{ account.get_region_display }}</div>{% endif %}
+                        </td>
+                        <td class="mono">{{ account.external_id }}</td>
+                        <td>{% include "components/verification_badge.html" with verified=account.verified %}</td>
+                        <td class="table__actions">
+                            {% if account.game.slug != "cs2" and account.game.slug != "dota2" %}
+                            <form method="post" action="{% url 'accounts:game_account_delete' account.pk %}">
+                                {% csrf_token %}
+                                <button class="btn btn--sm btn--ghost" type="submit">{% translate "Remove" %}</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            {% translate "No game accounts yet." as empty_title %}
+            {% include "components/empty_state.html" with title=empty_title %}
+            {% endif %}
+        </div>
+    </section>
+    <section class="card">
+        <div class="card__header"><h2 class="card__title">{% translate "Add Riot ID or BattleTag" %}</h2></div>
+        <div class="card__body">
+            <form class="form" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="form__actions">
+                    <button class="btn btn--primary" type="submit">{% translate "Add" %}</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
 {% endblock content %}

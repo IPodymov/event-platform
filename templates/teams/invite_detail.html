@@ -1,14 +1,28 @@
-{% extends "allauth/layouts/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 {% block head_title %}{% translate "Team invitation" %}{% endblock head_title %}
+{% block main_class %}main--narrow{% endblock main_class %}
 {% block content %}
-    <h1>{% blocktranslate with team=invite.team %}Invitation to {{ team }}{% endblocktranslate %}</h1>
-    <p>{{ invite.team.game.name }} — {{ invite.get_role_display }}</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" name="action" value="accept">{% translate "Accept" %}</button>
-        {% if invite.invitee_id == user.pk %}
-            <button type="submit" name="action" value="decline">{% translate "Decline" %}</button>
-        {% endif %}
-    </form>
+<section class="card">
+    <div class="card__body">
+        <div class="cluster">
+            {% include "components/avatar.html" with image=invite.team.logo name=invite.team.name square=True %}
+            <div>
+                <p class="page-header__eyebrow">{% translate "Team invitation" %}</p>
+                <h1>{{ invite.team.name }} <span class="entity-header__tag">{{ invite.team.tag }}</span></h1>
+            </div>
+        </div>
+        <div class="cluster">
+            <span class="badge">{{ invite.team.game.name }}</span>
+            <span class="badge badge--accent">{{ invite.get_role_display }}</span>
+        </div>
+        <form class="btn-group" method="post">
+            {% csrf_token %}
+            <button class="btn btn--primary" type="submit" name="action" value="accept">{% translate "Accept" %}</button>
+            {% if invite.invitee_id == user.pk %}
+            <button class="btn btn--ghost" type="submit" name="action" value="decline">{% translate "Decline" %}</button>
+            {% endif %}
+        </form>
+    </div>
+</section>
 {% endblock content %}

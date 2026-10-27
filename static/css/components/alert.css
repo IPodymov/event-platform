@@ -1,0 +1,32 @@
+/* Alert: flash messages and inline notices. */
+.alerts {
+    display: grid;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+}
+
+.alert {
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-left-width: 3px;
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    font-size: var(--text-sm);
+    max-width: none;
+}
+
+.alert--success {
+    border-left-color: var(--color-success);
+}
+
+.alert--info {
+    border-left-color: var(--color-text-muted);
+}
+
+.alert--warning {
+    border-left-color: var(--color-warning);
+}
+
+.alert--error {
+    border-left-color: var(--color-danger);
+}

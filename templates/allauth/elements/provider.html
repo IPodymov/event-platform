@@ -1,0 +1,2 @@
+{% comment %}The generic OpenID provider is installed only because Steam needs it; never offer it.{% endcomment %}
+{% if attrs.provider_id != "openid" %}<a class="btn" title="{{ attrs.name }}" href="{{ attrs.href }}">{{ attrs.name }}</a>{% endif %}

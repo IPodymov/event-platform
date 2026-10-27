@@ -1,0 +1,8 @@
+{% comment %}
+Avatar or logo.
+Params: image (FieldFile, optional), name (used for alt text and the fallback letter),
+size ("sm" | "lg", optional), square (True for team logos).
+{% endcomment %}
+<span class="avatar{% if size %} avatar--{{ size }}{% endif %}{% if square %} avatar--square{% endif %}">
+    {% if image %}<img src="{{ image.url }}" alt="{{ name }}" loading="lazy">{% else %}<span aria-hidden="true">{{ name|slice:":1" }}</span>{% endif %}
+</span>

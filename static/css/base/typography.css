@@ -1,0 +1,57 @@
+h1,
+h2,
+h3 {
+    line-height: var(--leading-tight);
+    font-weight: var(--weight-bold);
+    letter-spacing: -0.01em;
+}
+
+h1 {
+    font-size: var(--text-2xl);
+}
+
+h2 {
+    font-size: var(--text-lg);
+}
+
+h3 {
+    font-size: var(--text-md);
+}
+
+p {
+    max-width: 65ch;
+}
+
+a {
+    color: var(--color-text);
+    text-decoration-color: var(--color-border-strong);
+    text-underline-offset: 0.2em;
+    transition: color var(--transition), text-decoration-color var(--transition);
+}
+
+a:hover {
+    color: var(--color-accent);
+    text-decoration-color: currentColor;
+}
+
+small {
+    font-size: var(--text-sm);
+}
+
+code,
+kbd {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--color-border);
+    margin-block: var(--space-5);
+}
+
+/* Scores, dates and counters line up in columns */
+time,
+.numeric {
+    font-variant-numeric: tabular-nums;
+}

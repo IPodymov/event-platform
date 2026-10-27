@@ -1,0 +1,43 @@
+/* Page skeleton: sticky header, centered content column, footer. */
+.page {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: var(--container-width);
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+}
+
+.main {
+    padding-block: var(--space-6) var(--space-8);
+}
+
+/* Narrow column for sign-in / sign-up style screens */
+.main--narrow .container {
+    max-width: var(--container-narrow);
+}
+
+.footer {
+    border-top: 1px solid var(--color-border);
+    padding-block: var(--space-5);
+    color: var(--color-text-subtle);
+    font-size: var(--text-sm);
+}
+
+/* Main column + narrow aside (forms next to the data they change) */
+.layout-sidebar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    gap: var(--space-5);
+    align-items: start;
+}
+
+@media (max-width: 56rem) {
+    .layout-sidebar {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

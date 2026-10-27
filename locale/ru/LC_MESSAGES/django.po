@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tournament-platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 04:41+0000\n"
+"POT-Creation-Date: 2026-10-27 06:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -439,15 +439,6 @@ msgstr "Английский"
 msgid "Game accounts"
 msgstr "Игровые аккаунты"
 
-msgid "awaiting verification"
-msgstr "ожидает проверки"
-
-msgid "Remove"
-msgstr "Удалить"
-
-msgid "No game accounts yet."
-msgstr "Игровых аккаунтов пока нет."
-
 #, python-format
 msgid ""
 "CS2 and Dota 2 accounts are added automatically when you <a "
@@ -455,6 +446,21 @@ msgid ""
 msgstr ""
 "Аккаунты CS2 и Dota 2 добавляются автоматически, когда вы <a "
 "href=\"%(connections_url)s\">привязываете Steam</a>."
+
+msgid "Account id"
+msgstr "Идентификатор"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Actions"
+msgstr "Действия"
+
+msgid "Remove"
+msgstr "Удалить"
+
+msgid "No game accounts yet."
+msgstr "Игровых аккаунтов пока нет."
 
 msgid "Add Riot ID or BattleTag"
 msgstr "Добавить Riot ID или BattleTag"
@@ -465,22 +471,79 @@ msgstr "Добавить"
 msgid "Profile"
 msgstr "Профиль"
 
+msgid "How other players see you."
+msgstr "Так вас видят другие игроки."
+
+msgid "Public page"
+msgstr "Публичная страница"
+
 msgid "Save"
 msgstr "Сохранить"
+
+msgid "Steam and Discord"
+msgstr "Steam и Discord"
+
+msgid "Change Password"
+msgstr "Сменить пароль"
+
+#, python-format
+msgid "Joined %(date)s"
+msgstr "На платформе с %(date)s"
 
 msgid "Tournaments"
 msgstr "Турниры"
 
+msgid "Main"
+msgstr "Основная навигация"
+
+msgid "New team"
+msgstr "Новая команда"
+
+msgid "Account"
+msgstr "Аккаунт"
+
+msgid "Invitations"
+msgstr "Приглашения"
+
+msgid "Sign Out"
+msgstr "Выйти"
+
+msgid "Sign In"
+msgstr "Войти"
+
+msgid "Sign Up"
+msgstr "Регистрация"
+
+msgid "awaiting verification"
+msgstr "ожидает проверки"
+
+msgid "Home"
+msgstr "Главная"
+
+msgid "Esports tournaments"
+msgstr "Киберспортивные турниры"
+
+msgid "Build a team, sign up for tournaments and play matches in brackets."
+msgstr "Соберите команду, регистрируйтесь на турниры и играйте матчи по сетке."
+
+msgid "Create a team"
+msgstr "Создать команду"
+
+msgid "My profile"
+msgstr "Мой профиль"
+
+msgid "Disciplines"
+msgstr "Дисциплины"
+
 #, python-format
-msgid "Signed in as %(email)s."
-msgstr "Вы вошли как %(email)s."
+msgid "Team %(size)s+%(subs)s"
+msgstr "Команда %(size)s+%(subs)s"
+
+msgid "Solo 1v1"
+msgstr "Соло 1v1"
 
 msgid "Team invitation"
 msgstr "Приглашение в команду"
-
-#, python-format
-msgid "Invitation to %(team)s"
-msgstr "Приглашение в %(team)s"
 
 msgid "Accept"
 msgstr "Принять"
@@ -491,11 +554,17 @@ msgstr "Отклонить"
 msgid "My invitations"
 msgstr "Мои приглашения"
 
+msgid "Open"
+msgstr "Открыть"
+
 msgid "No invitations."
 msgstr "Приглашений нет."
 
-msgid "New team"
-msgstr "Новая команда"
+msgid "Team captains can invite you by your nickname."
+msgstr "Капитаны команд могут пригласить вас по нику."
+
+msgid "You will become the captain and can invite players."
+msgstr "Вы станете капитаном и сможете приглашать игроков."
 
 msgid "Create"
 msgstr "Создать"
@@ -506,17 +575,14 @@ msgstr "Команда распущена."
 msgid "Roster"
 msgstr "Состав"
 
+msgid "Leave team"
+msgstr "Покинуть команду"
+
 msgid "Change role"
 msgstr "Сменить роль"
 
 msgid "Make captain"
 msgstr "Сделать капитаном"
-
-msgid "Leave team"
-msgstr "Покинуть команду"
-
-msgid "Invitations"
-msgstr "Приглашения"
 
 msgid "Link"
 msgstr "Ссылка"
@@ -529,3 +595,11 @@ msgstr "Отозвать"
 
 msgid "Invite"
 msgstr "Пригласить"
+
+#, python-format
+#~ msgid "Signed in as %(email)s."
+#~ msgstr "Вы вошли как %(email)s."
+
+#, python-format
+#~ msgid "Invitation to %(team)s"
+#~ msgstr "Приглашение в %(team)s"

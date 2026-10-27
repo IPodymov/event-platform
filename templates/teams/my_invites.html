@@ -1,13 +1,28 @@
-{% extends "allauth/layouts/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 {% block head_title %}{% translate "My invitations" %}{% endblock head_title %}
 {% block content %}
+<header class="page-header">
     <h1>{% translate "My invitations" %}</h1>
-    <ul>
+</header>
+<section class="card">
+    {% if invites %}
+    <ul class="list">
         {% for invite in invites %}
-            <li><a href="{% url 'teams:invite' invite.token %}">{{ invite.team }}</a> ({{ invite.team.game.name }})</li>
-        {% empty %}
-            <li>{% translate "No invitations." %}</li>
+        <li class="list__item">
+            {% include "components/avatar.html" with image=invite.team.logo name=invite.team.name square=True %}
+            <div class="list__main">
+                <span class="list__title">{{ invite.team.name }}</span>
+                <span class="list__meta">{{ invite.team.game.name }} · {{ invite.get_role_display }}</span>
+            </div>
+            <a class="btn btn--sm btn--primary" href="{% url 'teams:invite' invite.token %}">{% translate "Open" %}</a>
+        </li>
         {% endfor %}
     </ul>
+    {% else %}
+    {% translate "No invitations." as empty_title %}
+    {% translate "Team captains can invite you by your nickname." as empty_text %}
+    {% include "components/empty_state.html" with title=empty_title text=empty_text %}
+    {% endif %}
+</section>
 {% endblock content %}

@@ -155,6 +155,33 @@ docs/                  ERD, решения, бэклог
 - **Загружаемые изображения** (аватары, логотипы) проверяются по размеру, формату и числу пикселей и перекодируются в WebP (`config/images.py`).
 - Новые зависимости добавляются только с объяснением в сообщении коммита. Один логический коммит на задачу, Conventional Commits.
 
+## Интерфейс и стили
+
+Минималистичная тема в духе FACEIT / start.gg: тёмная по умолчанию, светлая по системной настройке (`prefers-color-scheme`), один акцентный цвет, системные шрифты без внешних запросов. Сборщика нет — CSS отдаётся как статика Django.
+
+```
+static/css/
+  main.css               единственная точка входа: порядок слоёв и @import всех файлов
+  base/                  tokens.css (цвета, отступы, шрифты, темы), reset.css, typography.css
+  layout/                page.css (каркас, контейнер, .layout-sidebar), header.css
+  components/            по файлу на компонент: button, form, card, badge, avatar, table,
+                         alert, page-header, entity-header, list, empty-state
+  utilities.css          мелкие вспомогательные классы (stack, cluster, grid-2…)
+templates/
+  base.html              каркас страницы: шапка, сообщения, контент, футер
+  components/            HTML-компоненты: header, messages, avatar, empty_state, verification_badge
+  allauth/               страницы входа и регистрации на тех же компонентах
+```
+
+Правила:
+
+- Каскад задают слои `@layer tokens, base, layout, components, utilities` — компоненты не спорят друг с другом специфичностью.
+- Компоненты используют только переменные из `tokens.css`; новые цвета и размеры сначала добавляются туда.
+- Имена классов — BEM: `.card`, `.card__header`, `.btn--primary`.
+- Новый компонент — новый файл в `static/css/components/` и строка `@import` в `main.css` (тест `tests/test_frontend.py` проверяет, что подключены все файлы).
+- Формы Django (`{{ form.as_p }}`) внутри `<form class="form">` стилизуются без классов на полях.
+- Теги шаблонов `{{ … }}` и `{% … %}` нельзя переносить на несколько строк — Django выводит их как текст.
+
 ## API
 
 Основное API — `/api/v1/`, схема в `/api/docs/`. Аутентификация — сессия + CSRF (заголовок `X-CSRFToken`), вход и регистрация — через `/api/auth/browser/v1/` (allauth headless, своя спецификация в `/api/auth/openapi.html`).

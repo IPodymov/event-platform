@@ -1,0 +1,40 @@
+/* Table: dense data (rosters, standings, game accounts). */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+}
+
+.table th {
+    padding: var(--space-2) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-subtle);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.04em;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.table td {
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+}
+
+.table tr:last-child td {
+    border-bottom: 0;
+}
+
+.table tbody tr:hover {
+    background: var(--color-surface-raised);
+}
+
+.table__actions {
+    text-align: right;
+}
+
+/* Horizontal scroll on narrow screens instead of breaking the layout */
+.table-wrap {
+    overflow-x: auto;
+}

@@ -1,10 +1,43 @@
-{% extends "allauth/layouts/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
-{% block head_title %}{% translate "Tournaments" %}{% endblock head_title %}
+{% block head_title %}{% translate "Home" %}{% endblock head_title %}
 {% block content %}
-{# Placeholder until the home page task (Sprint 9). #}
-<h1>{% translate "Tournaments" %}</h1>
-{% if user.is_authenticated %}
-<p>{% blocktranslate with email=user.email %}Signed in as {{ email }}.{% endblocktranslate %}</p>
-{% endif %}
+<div class="stack">
+    <header class="page-header">
+        <div>
+            <p class="page-header__eyebrow">{% translate "Esports tournaments" %}</p>
+            <h1>{% translate "Tournaments" %}</h1>
+            <p class="page-header__subtitle">{% translate "Build a team, sign up for tournaments and play matches in brackets." %}</p>
+        </div>
+        <div class="btn-group">
+            {% if user.is_authenticated %}
+            <a class="btn btn--primary" href="{% url 'teams:create' %}">{% translate "Create a team" %}</a>
+            <a class="btn" href="{% url 'accounts:public_profile' user.profile.nickname %}">{% translate "My profile" %}</a>
+            {% else %}
+            <a class="btn btn--primary" href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
+            <a class="btn" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
+            {% endif %}
+        </div>
+    </header>
+    <section class="stack stack--sm">
+        <h2>{% translate "Disciplines" %}</h2>
+        <div class="card-grid">
+            {% for game in games %}
+            <article class="card">
+                <div class="card__body">
+                    <h3>{{ game.name }}</h3>
+                    <div class="cluster">
+                        {% if game.is_team %}
+                        <span class="badge">{% blocktranslate with size=game.roster_size subs=game.max_substitutes %}Team {{ size }}+{{ subs }}{% endblocktranslate %}</span>
+                        {% else %}
+                        <span class="badge">{% translate "Solo 1v1" %}</span>
+                        {% endif %}
+                        {% for series in game.series_labels %}<span class="badge">{{ series }}</span>{% endfor %}
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+</div>
 {% endblock content %}

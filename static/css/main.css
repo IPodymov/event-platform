@@ -1,0 +1,27 @@
+/*
+ * Entry point of the design system. Each file is one concern; cascade layers
+ * fix the precedence regardless of selector specificity:
+ *   tokens < base < layout < components < utilities
+ */
+@layer tokens, base, layout, components, utilities;
+
+@import url("base/tokens.css") layer(tokens);
+@import url("base/reset.css") layer(base);
+@import url("base/typography.css") layer(base);
+
+@import url("layout/page.css") layer(layout);
+@import url("layout/header.css") layer(layout);
+
+@import url("components/button.css") layer(components);
+@import url("components/form.css") layer(components);
+@import url("components/card.css") layer(components);
+@import url("components/badge.css") layer(components);
+@import url("components/avatar.css") layer(components);
+@import url("components/table.css") layer(components);
+@import url("components/alert.css") layer(components);
+@import url("components/page-header.css") layer(components);
+@import url("components/entity-header.css") layer(components);
+@import url("components/list.css") layer(components);
+@import url("components/empty-state.css") layer(components);
+
+@import url("utilities.css") layer(utilities);
