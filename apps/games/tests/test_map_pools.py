@@ -68,7 +68,8 @@ def test_database_rejects_incomplete_active_pool() -> None:
         )
 
 
-@pytest.mark.django_db(transaction=True)
+# serialized_rollback restores the disciplines seeded by migrations after the flush.
+@pytest.mark.django_db(transaction=True, serialized_rollback=True)
 def test_concurrent_activation_leaves_one_active_pool() -> None:
     pools = [make_pool(f"Pool {i}") for i in range(4)]
     errors: list[BaseException] = []
