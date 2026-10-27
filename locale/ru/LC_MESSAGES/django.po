@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tournament-platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 13:13+0000\n"
+"POT-Creation-Date: 2026-10-27 04:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -163,6 +163,27 @@ msgstr "Профиль сохранён."
 msgid "Game account added. It will be verified by a moderator."
 msgstr "Игровой аккаунт добавлен. Его проверит модератор."
 
+msgid "Exactly 7 maps, separated by commas."
+msgstr "Ровно 7 карт через запятую."
+
+msgid "Make the selected pool active"
+msgstr "Сделать выбранный пул активным"
+
+msgid "Select exactly one pool."
+msgstr "Выберите ровно один пул."
+
+msgid "The pool is now active."
+msgstr "Пул стал активным."
+
+msgid "Game operation failed."
+msgstr "Не удалось выполнить операцию с дисциплиной."
+
+msgid "This discipline has no map veto."
+msgstr "В этой дисциплине нет выбора карт."
+
+msgid "A map pool needs exactly 7 different maps."
+msgstr "В пуле должно быть ровно 7 разных карт."
+
 msgid "Solo"
 msgstr "Соло"
 
@@ -201,6 +222,15 @@ msgstr "активна"
 
 msgid "games"
 msgstr "дисциплины"
+
+msgid "maps"
+msgstr "карты"
+
+msgid "map pool"
+msgstr "пул карт"
+
+msgid "map pools"
+msgstr "пулы карт"
 
 msgid "Europe"
 msgstr "Европа"
@@ -251,7 +281,9 @@ msgstr "Игровых аккаунтов пока нет."
 msgid ""
 "CS2 and Dota 2 accounts are added automatically when you <a "
 "href=\"%(connections_url)s\">link Steam</a>."
-msgstr "Аккаунты CS2 и Dota 2 добавляются автоматически, когда вы <a href=\"%(connections_url)s\">привязываете Steam</a>."
+msgstr ""
+"Аккаунты CS2 и Dota 2 добавляются автоматически, когда вы <a "
+"href=\"%(connections_url)s\">привязываете Steam</a>."
 
 msgid "Add Riot ID or BattleTag"
 msgstr "Добавить Riot ID или BattleTag"

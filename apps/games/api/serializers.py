@@ -1,7 +1,7 @@
 from drf_spectacular.utils import extend_schema_field, inline_serializer
 from rest_framework import serializers
 
-from apps.games.models import Game
+from apps.games.models import Game, MapPool
 from apps.games.regions import ACCOUNT_REGIONS, EXTERNAL_ID_KIND, TOURNAMENT_REGIONS, Region
 
 REGION_LIST_SCHEMA = inline_serializer(
@@ -43,4 +43,11 @@ class GameSerializer(serializers.ModelSerializer[Game]):
             "account_regions",
             "tournament_regions",
         )
+        read_only_fields = fields
+
+
+class MapPoolSerializer(serializers.ModelSerializer[MapPool]):
+    class Meta:
+        model = MapPool
+        fields = ("name", "maps")
         read_only_fields = fields

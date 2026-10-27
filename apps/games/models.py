@@ -76,3 +76,50 @@ class Game(models.Model):
     @property
     def is_team(self) -> bool:
         return self.participant_type == ParticipantType.TEAM
+
+
+MAP_POOL_SIZE = 7
+MAP_NAME_MAX_LENGTH = 50
+# Disciplines that use a map veto and therefore need a map pool.
+MAP_POOL_GAMES = (GameSlug.CS2,)
+
+
+class MapPool(models.Model):
+    """A set of maps for veto; exactly one pool per discipline is active."""
+
+    game = models.ForeignKey(
+        Game,
+        on_delete=models.PROTECT,
+        related_name="map_pools",
+        limit_choices_to={"slug__in": MAP_POOL_GAMES},
+        verbose_name=_("game"),
+    )
+    name = models.CharField(_("name"), max_length=100)
+    maps = ArrayField(
+        models.CharField(max_length=MAP_NAME_MAX_LENGTH),
+        default=list,
+        blank=True,
+        verbose_name=_("maps"),
+    )
+    is_active = models.BooleanField(_("active"), default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("map pool")
+        verbose_name_plural = _("map pools")
+        ordering = ("-is_active", "-created_at")
+        constraints = [
+            models.UniqueConstraint(
+                fields=("game",),
+                condition=Q(is_active=True),
+                name="games_mappool_one_active_per_game",
+            ),
+            models.CheckConstraint(
+                condition=Q(is_active=False) | Q(maps__len=MAP_POOL_SIZE),
+                name="games_mappool_active_has_full_pool",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return self.name
