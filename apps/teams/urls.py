@@ -13,6 +13,12 @@ urlpatterns = [
         views.team_invite_revoke,
         name="invite_revoke",
     ),
+    path(
+        "teams/<int:pk>/members/<int:membership_id>/",
+        views.team_member_action,
+        name="member_action",
+    ),
+    path("teams/<int:pk>/leave/", views.team_leave, name="leave"),
     path("invites/<str:token>/", views.invite_detail, name="invite"),
     path("profile/invites/", views.my_invites, name="my_invites"),
 ]

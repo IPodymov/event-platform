@@ -13,19 +13,25 @@ from apps.teams.exceptions import (
     AlreadyInTeamError,
     AlreadyInvitedError,
     AlreadyMemberError,
+    CannotRemoveCaptainError,
+    CaptainMustTransferError,
     InvalidLogoError,
+    InvalidRoleError,
     InviteNotActiveError,
     LogoTooLargeError,
     NotATeamGameError,
     NotInviteeError,
     NotTeamCaptainError,
+    NotTeamMemberError,
     PlayerNotFoundError,
     RosterFullError,
+    TeamDisbandedError,
     TeamNameTakenError,
     TeamTagTakenError,
 )
 from apps.teams.models import InviteStatus, Team, TeamInvite, TeamMembership, TeamRole
 from apps.teams.selectors import (
+    active_memberships,
     count_active_roles,
     has_active_team,
     is_team_member,
@@ -97,6 +103,27 @@ def _ensure_captain(team: Team, user: User) -> None:
         raise NotTeamCaptainError
 
 
+def _ensure_not_disbanded(team: Team) -> None:
+    if team.is_disbanded:
+        raise TeamDisbandedError
+
+
+def _lock_team(team_id: int) -> Team:
+    """Lock the team row; roster changes of one team are serialized through it."""
+    return Team.objects.select_for_update().select_related("game").get(pk=team_id)
+
+
+def _lock_membership(team: Team, membership_id: int) -> TeamMembership:
+    membership = (
+        TeamMembership.objects.select_for_update()
+        .filter(pk=membership_id, team=team, left_at__isnull=True)
+        .first()
+    )
+    if membership is None:
+        raise NotTeamMemberError
+    return membership
+
+
 def _ensure_pending(invite: TeamInvite) -> None:
     if invite.status != InviteStatus.PENDING or invite.expires_at <= timezone.now():
         raise InviteNotActiveError
@@ -107,6 +134,7 @@ def invite_create(
 ) -> TeamInvite:
     """Invite a player by nickname, or create a shareable link when ``nickname`` is empty."""
     _ensure_captain(team, by)
+    _ensure_not_disbanded(team)
     invitee: User | None = None
     if nickname:
         profile = Profile.objects.select_related("user").filter(nickname__iexact=nickname).first()
@@ -145,9 +173,10 @@ def invite_accept(*, user: User, invite: TeamInvite) -> TeamMembership:
         raise NotInviteeError
     with transaction.atomic():
         # Serializes acceptances per team so capacity checks cannot race.
-        team = Team.objects.select_for_update().select_related("game").get(pk=invite.team_id)
+        team = _lock_team(invite.team_id)
         invite = TeamInvite.objects.select_for_update().get(pk=invite.pk)
         _ensure_pending(invite)
+        _ensure_not_disbanded(team)
         if is_team_member(team, user):
             raise AlreadyMemberError
         if has_active_team(user, team.game):
@@ -177,3 +206,84 @@ def invite_revoke(*, by: User, invite: TeamInvite) -> None:
         raise InviteNotActiveError
     invite.status, invite.responded_at = InviteStatus.REVOKED, timezone.now()
     invite.save(update_fields=["status", "responded_at"])
+
+
+# --- roster management --------------------------------------------------------
+# TODO(Sprint 3): decide whether roster changes are blocked while the team is
+# registered in an unfinished tournament (the registration keeps roster_snapshot).
+
+
+def member_change_role(*, by: User, team: Team, membership_id: int, role: str) -> TeamMembership:
+    """Move a member between player and substitute."""
+    if role not in (TeamRole.PLAYER, TeamRole.SUBSTITUTE):
+        raise InvalidRoleError
+    with transaction.atomic():
+        team = _lock_team(team.pk)
+        _ensure_captain(team, by)
+        _ensure_not_disbanded(team)
+        membership = _lock_membership(team, membership_id)
+        if membership.role == TeamRole.CAPTAIN:
+            raise CannotRemoveCaptainError
+        if membership.role != role and not _has_free_slot(team, role):
+            raise RosterFullError
+        membership.role = role
+        membership.save(update_fields=["role"])
+    return membership
+
+
+def captain_transfer(*, by: User, team: Team, membership_id: int) -> Team:
+    """Make another member captain; the old captain takes over their previous role."""
+    with transaction.atomic():
+        team = _lock_team(team.pk)
+        _ensure_captain(team, by)
+        _ensure_not_disbanded(team)
+        new_captain = _lock_membership(team, membership_id)
+        if new_captain.role == TeamRole.CAPTAIN:
+            return team
+        old_captain = TeamMembership.objects.select_for_update().get(
+            team=team, role=TeamRole.CAPTAIN, left_at__isnull=True
+        )
+        # Swapping roles keeps the main roster and substitutes counts unchanged.
+        # The old captain is demoted first: one active captain per team is a DB constraint.
+        old_captain.role = new_captain.role
+        old_captain.save(update_fields=["role"])
+        new_captain.role = TeamRole.CAPTAIN
+        new_captain.save(update_fields=["role"])
+        team.captain_id = new_captain.user_id
+        team.save(update_fields=["captain", "updated_at"])
+    return team
+
+
+def member_remove(*, by: User, team: Team, membership_id: int) -> None:
+    with transaction.atomic():
+        team = _lock_team(team.pk)
+        _ensure_captain(team, by)
+        membership = _lock_membership(team, membership_id)
+        if membership.role == TeamRole.CAPTAIN:
+            raise CannotRemoveCaptainError
+        membership.left_at = timezone.now()
+        membership.save(update_fields=["left_at"])
+
+
+def member_leave(*, user: User, team: Team) -> None:
+    """Leave the team. A captain may only leave as the last member, which disbands the team."""
+    with transaction.atomic():
+        team = _lock_team(team.pk)
+        membership = (
+            TeamMembership.objects.select_for_update()
+            .filter(team=team, user=user, left_at__isnull=True)
+            .first()
+        )
+        if membership is None:
+            raise NotTeamMemberError
+        now = timezone.now()
+        if membership.role == TeamRole.CAPTAIN:
+            if active_memberships().filter(team=team).exclude(pk=membership.pk).exists():
+                raise CaptainMustTransferError
+            team.disbanded_at = now
+            team.save(update_fields=["disbanded_at", "updated_at"])
+            TeamInvite.objects.filter(team=team, status=InviteStatus.PENDING).update(
+                status=InviteStatus.REVOKED, responded_at=now
+            )
+        membership.left_at = now
+        membership.save(update_fields=["left_at"])

@@ -1,6 +1,7 @@
 from django.urls import path
 
 from apps.teams.api.views import (
+    CaptainTransferView,
     InviteAcceptView,
     InviteDeclineView,
     InviteDetailView,
@@ -8,7 +9,9 @@ from apps.teams.api.views import (
     TeamDetailView,
     TeamInviteListView,
     TeamInviteRevokeView,
+    TeamLeaveView,
     TeamListView,
+    TeamMemberView,
 )
 
 app_name = "teams-api"
@@ -22,6 +25,17 @@ urlpatterns = [
         TeamInviteRevokeView.as_view(),
         name="team-invite-revoke",
     ),
+    path(
+        "teams/<int:pk>/members/<int:membership_id>/",
+        TeamMemberView.as_view(),
+        name="team-member",
+    ),
+    path(
+        "teams/<int:pk>/transfer-captaincy/",
+        CaptainTransferView.as_view(),
+        name="team-transfer-captaincy",
+    ),
+    path("teams/<int:pk>/leave/", TeamLeaveView.as_view(), name="team-leave"),
     path("me/invites/", MyInviteListView.as_view(), name="my-invites"),
     path("invites/<str:token>/", InviteDetailView.as_view(), name="invite-detail"),
     path("invites/<str:token>/accept/", InviteAcceptView.as_view(), name="invite-accept"),

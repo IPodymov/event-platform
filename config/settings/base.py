@@ -226,5 +226,7 @@ SPECTACULAR_SETTINGS = {
     "ENUM_NAME_OVERRIDES": {
         "GameSlugEnum": "apps.games.models.GameSlug",
         "RegionEnum": "apps.games.regions.Region",
+        "TeamRoleEnum": "apps.teams.models.TeamRole",
+        "InviteRoleEnum": "apps.teams.models.INVITE_ROLES",
     },
 }

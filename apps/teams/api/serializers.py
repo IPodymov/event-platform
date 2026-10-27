@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework import serializers
 
 from apps.games.models import Game
-from apps.teams.models import Team, TeamInvite, TeamMembership, TeamRole
+from apps.teams.models import INVITE_ROLES, Team, TeamInvite, TeamMembership, TeamRole
 
 
 class TeamMemberSerializer(serializers.ModelSerializer[TeamMembership]):
@@ -10,7 +10,7 @@ class TeamMemberSerializer(serializers.ModelSerializer[TeamMembership]):
 
     class Meta:
         model = TeamMembership
-        fields = ("nickname", "role", "joined_at")
+        fields = ("id", "nickname", "role", "joined_at")
         read_only_fields = fields
 
 
@@ -22,8 +22,17 @@ class TeamSerializer(serializers.ModelSerializer[Team]):
 
     class Meta:
         model = Team
-        fields: tuple[str, ...] = ("id", "name", "tag", "logo", "game", "captain", "created_at")
-        read_only_fields: tuple[str, ...] = ("id", "captain", "created_at")
+        fields: tuple[str, ...] = (
+            "id",
+            "name",
+            "tag",
+            "logo",
+            "game",
+            "captain",
+            "created_at",
+            "disbanded_at",
+        )
+        read_only_fields: tuple[str, ...] = ("id", "captain", "created_at", "disbanded_at")
         extra_kwargs = {"logo": {"required": False}}
         # Uniqueness is checked by the service, which reports the right field.
         validators: list[object] = []
@@ -62,3 +71,11 @@ class TeamInviteSerializer(serializers.ModelSerializer[TeamInvite]):
         path = reverse("teams:invite", args=[invite.token])
         request = self.context.get("request")
         return request.build_absolute_uri(path) if request else path
+
+
+class MemberRoleSerializer(serializers.Serializer[TeamMembership]):
+    role = serializers.ChoiceField(choices=INVITE_ROLES)
+
+
+class CaptainTransferSerializer(serializers.Serializer[Team]):
+    membership_id = serializers.IntegerField(help_text="Roster entry id of the new captain.")

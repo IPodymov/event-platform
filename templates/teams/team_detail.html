@@ -2,36 +2,63 @@
 {% load i18n %}
 {% block head_title %}{{ team }}{% endblock head_title %}
 {% block content %}
-    <h1>[{{ team.tag }}] {{ team.name }}</h1>
-    {% if team.logo %}<img src="{{ team.logo.url }}" alt="{{ team.name }}" width="128" height="128">{% endif %}
-    <p>{{ team.game.name }}</p>
-    <h2>{% translate "Roster" %}</h2>
-    <ul>
-        {% for member in team.roster %}
-            <li>
-                <a href="{% url 'accounts:public_profile' member.user.profile.nickname %}">{{ member.user.profile.nickname }}</a>
-                — {{ member.get_role_display }}
-            </li>
-        {% endfor %}
-    </ul>
-    {% if invite_form %}
-        <h2>{% translate "Invitations" %}</h2>
-        <ul>
-            {% for invite in invites %}
-                <li>
-                    {% if invite.invitee %}{{ invite.invitee.profile.nickname }}{% else %}{% translate "Link" %}: {{ request.scheme }}://{{ request.get_host }}{% url 'teams:invite' invite.token %}{% endif %}
-                    — {{ invite.get_role_display }}, {% translate "until" %} {{ invite.expires_at|date:"SHORT_DATETIME_FORMAT" }}
-                    <form method="post" action="{% url 'teams:invite_revoke' team.pk invite.pk %}">
-                        {% csrf_token %}
-                        <button type="submit">{% translate "Revoke" %}</button>
-                    </form>
-                </li>
-            {% endfor %}
-        </ul>
-        <form method="post" action="{% url 'teams:invite_create' team.pk %}">
+<h1>[{{ team.tag }}] {{ team.name }}</h1>
+{% if team.logo %}<img src="{{ team.logo.url }}" alt="{{ team.name }}" width="128" height="128">{% endif %}
+<p>{{ team.game.name }}</p>
+{% if team.is_disbanded %}<p>{% translate "The team has been disbanded." %}</p>{% endif %}
+<h2>{% translate "Roster" %}</h2>
+<ul>
+    {% for member in team.roster %}
+    {% with nickname=member.user.profile.nickname %}
+    <li>
+        <a href="{% url 'accounts:public_profile' nickname %}">{{ nickname }}</a>
+        — {{ member.get_role_display }}
+        {% if invite_form and member.role != "captain" %}
+        <form method="post" action="{% url 'teams:member_action' team.pk member.pk %}">
             {% csrf_token %}
-            {{ invite_form.as_p }}
-            <button type="submit">{% translate "Invite" %}</button>
+            <select name="role">
+                {% for value, label in invite_roles %}
+                <option value="{{ value }}" {% if value == member.role %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" name="action" value="set_role">{% translate "Change role" %}</button>
+            <button type="submit" name="action" value="make_captain">{% translate "Make captain" %}</button>
+            <button type="submit" name="action" value="remove">{% translate "Remove" %}</button>
         </form>
-    {% endif %}
+        {% endif %}
+    </li>
+    {% endwith %}
+    {% endfor %}
+</ul>
+{% if is_member %}
+<form method="post" action="{% url 'teams:leave' team.pk %}">
+    {% csrf_token %}
+    <button type="submit">{% translate "Leave team" %}</button>
+</form>
+{% endif %}
+{% if invite_form %}
+<h2>{% translate "Invitations" %}</h2>
+<ul>
+    {% for invite in invites %}
+    <li>
+        {% if invite.invitee %}
+        {{ invite.invitee.profile.nickname }}
+        {% else %}
+        {% url 'teams:invite' invite.token as invite_path %}
+        {% translate "Link" %}: {{ request.scheme }}://{{ request.get_host }}{{ invite_path }}
+        {% endif %}
+        — {{ invite.get_role_display }}, {% translate "until" %} {{ invite.expires_at|date:"SHORT_DATETIME_FORMAT" }}
+        <form method="post" action="{% url 'teams:invite_revoke' team.pk invite.pk %}">
+            {% csrf_token %}
+            <button type="submit">{% translate "Revoke" %}</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+<form method="post" action="{% url 'teams:invite_create' team.pk %}">
+    {% csrf_token %}
+    {{ invite_form.as_p }}
+    <button type="submit">{% translate "Invite" %}</button>
+</form>
+{% endif %}
 {% endblock content %}

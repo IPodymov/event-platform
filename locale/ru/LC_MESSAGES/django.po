@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tournament-platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 04:36+0000\n"
+"POT-Creation-Date: 2026-10-27 04:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -292,6 +292,21 @@ msgstr "Это приглашение больше не действует."
 msgid "The team has no free slot for this role."
 msgstr "В команде нет свободного места для этой роли."
 
+msgid "This team has been disbanded."
+msgstr "Эта команда распущена."
+
+msgid "This player is not in the team."
+msgstr "Этого игрока нет в команде."
+
+msgid "Transfer the captaincy to another member before leaving."
+msgstr "Перед уходом передайте капитанство другому участнику."
+
+msgid "The captain cannot be removed; transfer the captaincy first."
+msgstr "Капитана нельзя исключить — сначала передайте капитанство."
+
+msgid "Choose player or substitute."
+msgstr "Выберите: игрок или запасной."
+
 msgid "Name"
 msgstr "Название"
 
@@ -321,6 +336,9 @@ msgstr "логотип"
 
 msgid "captain"
 msgstr "капитан"
+
+msgid "disbanded at"
+msgstr "распущена"
 
 msgid "team"
 msgstr "команда"
@@ -403,6 +421,9 @@ msgstr "Приглашение отклонено."
 msgid "You joined the team."
 msgstr "Вы вступили в команду."
 
+msgid "You left the team."
+msgstr "Вы покинули команду."
+
 msgid "Operation failed."
 msgstr "Не удалось выполнить операцию."
 
@@ -479,8 +500,20 @@ msgstr "Новая команда"
 msgid "Create"
 msgstr "Создать"
 
+msgid "The team has been disbanded."
+msgstr "Команда распущена."
+
 msgid "Roster"
 msgstr "Состав"
+
+msgid "Change role"
+msgstr "Сменить роль"
+
+msgid "Make captain"
+msgstr "Сделать капитаном"
+
+msgid "Leave team"
+msgstr "Покинуть команду"
 
 msgid "Invitations"
 msgstr "Приглашения"

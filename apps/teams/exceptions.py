@@ -69,3 +69,25 @@ class InviteNotActiveError(TeamsError):
 class RosterFullError(TeamsError):
     message = _("The team has no free slot for this role.")
     field = "role"
+
+
+class TeamDisbandedError(TeamsError):
+    message = _("This team has been disbanded.")
+
+
+class NotTeamMemberError(TeamsError):
+    message = _("This player is not in the team.")
+
+
+class CaptainMustTransferError(TeamsError):
+    message = _("Transfer the captaincy to another member before leaving.")
+
+
+class CannotRemoveCaptainError(TeamsError):
+    message = _("The captain cannot be removed; transfer the captaincy first.")
+    field = "role"
+
+
+class InvalidRoleError(TeamsError):
+    message = _("Choose player or substitute.")
+    field = "role"

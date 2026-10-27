@@ -23,7 +23,10 @@ def is_team_tag_taken(game: Game, tag: str) -> bool:
 
 
 def list_teams(*, game_slug: str | None = None) -> QuerySet[Team]:
-    teams = Team.objects.select_related("game", "captain__profile")
+    """Active (not disbanded) teams."""
+    teams = Team.objects.filter(disbanded_at__isnull=True).select_related(
+        "game", "captain__profile"
+    )
     if game_slug:
         teams = teams.filter(game__slug=game_slug)
     return teams
@@ -33,7 +36,7 @@ def get_team_with_roster(team_id: int) -> Team | None:
     """The team with its active members (and their profiles) prefetched as ``roster``."""
     roster = active_memberships().select_related("user__profile").order_by("joined_at")
     return (
-        list_teams()
+        Team.objects.select_related("game", "captain__profile")
         .prefetch_related(Prefetch("memberships", queryset=roster, to_attr="roster"))
         .filter(pk=team_id)
         .first()

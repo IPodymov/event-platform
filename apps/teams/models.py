@@ -29,6 +29,8 @@ class Team(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    # Disbanded teams keep their name and tag (tournament history refers to them).
+    disbanded_at = models.DateTimeField(_("disbanded at"), null=True, blank=True)
 
     class Meta:
         verbose_name = _("team")
@@ -51,6 +53,10 @@ class Team(models.Model):
 
     def __str__(self) -> str:
         return f"[{self.tag}] {self.name}"
+
+    @property
+    def is_disbanded(self) -> bool:
+        return self.disbanded_at is not None
 
 
 class TeamRole(models.TextChoices):

@@ -13,10 +13,11 @@ from apps.accounts.models import User
 from apps.teams import services
 from apps.teams.exceptions import TeamsError
 from apps.teams.forms import TeamCreateForm, TeamInviteForm
-from apps.teams.models import Team, TeamInvite
+from apps.teams.models import INVITE_ROLES, Team, TeamInvite
 from apps.teams.selectors import (
     get_invite_by_token,
     get_team_with_roster,
+    is_team_member,
     list_team_invites,
     list_user_invites,
 )
@@ -41,8 +42,16 @@ def team_detail(request: HttpRequest, pk: int) -> HttpResponse:
     team = get_team_with_roster(pk)
     if team is None:
         raise Http404
-    context: dict[str, Any] = {"team": team}
-    if request.user.is_authenticated and team.captain_id == request.user.pk:
+    context: dict[str, Any] = {
+        "team": team,
+        "is_member": request.user.is_authenticated and is_team_member(team, request.user),
+        "invite_roles": INVITE_ROLES,
+    }
+    if (
+        request.user.is_authenticated
+        and team.captain_id == request.user.pk
+        and not team.is_disbanded
+    ):
         context["invite_form"] = TeamInviteForm()
         context["invites"] = list_team_invites(team)
     return render(request, "teams/team_detail.html", context)
@@ -98,3 +107,37 @@ def invite_detail(request: HttpRequest, token: str) -> HttpResponse:
 def my_invites(request: HttpRequest) -> HttpResponse:
     invites = list_user_invites(cast(User, request.user))
     return render(request, "teams/my_invites.html", {"invites": invites})
+
+
+@login_required
+@require_POST
+def team_member_action(request: HttpRequest, pk: int, membership_id: int) -> HttpResponse:
+    """Captain's roster actions: set role, make captain or remove."""
+    team = get_object_or_404(Team, pk=pk)
+    user = cast(User, request.user)
+    action = request.POST.get("action")
+    try:
+        if action == "make_captain":
+            services.captain_transfer(by=user, team=team, membership_id=membership_id)
+        elif action == "remove":
+            services.member_remove(by=user, team=team, membership_id=membership_id)
+        else:
+            services.member_change_role(
+                by=user, team=team, membership_id=membership_id, role=request.POST.get("role", "")
+            )
+    except DomainError as error:
+        messages.error(request, str(error))
+    return redirect("teams:detail", pk=pk)
+
+
+@login_required
+@require_POST
+def team_leave(request: HttpRequest, pk: int) -> HttpResponse:
+    team = get_object_or_404(Team, pk=pk)
+    try:
+        services.member_leave(user=cast(User, request.user), team=team)
+    except DomainError as error:
+        messages.error(request, str(error))
+        return redirect("teams:detail", pk=pk)
+    messages.success(request, _("You left the team."))
+    return redirect("home")

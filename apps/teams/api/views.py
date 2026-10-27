@@ -14,6 +14,8 @@ from rest_framework.views import APIView
 from apps.accounts.models import User
 from apps.teams import services
 from apps.teams.api.serializers import (
+    CaptainTransferSerializer,
+    MemberRoleSerializer,
     TeamDetailSerializer,
     TeamInviteCreateSerializer,
     TeamInviteSerializer,
@@ -157,4 +159,52 @@ class InviteDeclineView(APIView):
     @extend_schema(request=None, responses={204: None})
     def post(self, request: Request, token: str) -> Response:
         services.invite_decline(user=cast(User, request.user), invite=_invite_or_404(token))
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@extend_schema(tags=["team roster"])
+class TeamMemberView(APIView):
+    """Captain actions on a roster entry: change role or remove the member."""
+
+    @extend_schema(request=MemberRoleSerializer, responses=TeamMemberSerializer)
+    def patch(self, request: Request, pk: int, membership_id: int) -> Response:
+        data = MemberRoleSerializer(data=request.data)
+        data.is_valid(raise_exception=True)
+        membership = services.member_change_role(
+            by=cast(User, request.user),
+            team=_team_or_404(pk),
+            membership_id=membership_id,
+            role=data.validated_data["role"],
+        )
+        return Response(TeamMemberSerializer(membership).data)
+
+    @extend_schema(responses={204: None})
+    def delete(self, request: Request, pk: int, membership_id: int) -> Response:
+        services.member_remove(
+            by=cast(User, request.user), team=_team_or_404(pk), membership_id=membership_id
+        )
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@extend_schema(tags=["team roster"])
+class CaptainTransferView(APIView):
+    @extend_schema(request=CaptainTransferSerializer, responses=TeamDetailSerializer)
+    def post(self, request: Request, pk: int) -> Response:
+        data = CaptainTransferSerializer(data=request.data)
+        data.is_valid(raise_exception=True)
+        services.captain_transfer(
+            by=cast(User, request.user),
+            team=_team_or_404(pk),
+            membership_id=data.validated_data["membership_id"],
+        )
+        return Response(TeamDetailSerializer(get_team_with_roster(pk)).data)
+
+
+@extend_schema(tags=["team roster"])
+class TeamLeaveView(APIView):
+    """Leave the team; a captain can leave only as the last member (disbands the team)."""
+
+    @extend_schema(request=None, responses={204: None})
+    def post(self, request: Request, pk: int) -> Response:
+        services.member_leave(user=cast(User, request.user), team=_team_or_404(pk))
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -1,3 +1,5 @@
+import re
+
 from django.apps import apps
 from django.conf import settings
 from django.utils import translation
@@ -28,3 +30,14 @@ def test_project_apps_use_big_auto_field() -> None:
 def test_project_strings_are_translated_to_russian() -> None:
     with translation.override("ru"):
         assert translation.gettext("Tournaments") == "Турниры"
+
+
+def test_templates_have_no_multiline_tags() -> None:
+    # Django renders a {{ }} or {% %} tag split across lines as plain text.
+    broken = [
+        str(path)
+        for path in (settings.BASE_DIR / "templates").rglob("*.html")
+        if re.search(r"\{\{[^}]*\n|\{%[^%]*\n", path.read_text())
+    ]
+
+    assert broken == []
